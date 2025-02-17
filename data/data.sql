@@ -2,6 +2,7 @@ DROP DATABASE IF EXISTS pay_my_buddy;
 CREATE DATABASE pay_my_buddy;
 USE pay_my_buddy;
 
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,18 +33,20 @@ CREATE TABLE transactions (
     CONSTRAINT fk_receiver FOREIGN KEY (receiver_id) REFERENCES users (id)
 );
 
+
+-- mot de passe "password123"
+
 INSERT INTO users (username, email, password, balance)
 VALUES
-    ('Alice', 'alice@example.com', 'password123', 100.00),
-    ('Bob', 'bob@example.com', 'password123', 50.00),
-    ('Charlie', 'charlie@example.com', 'password123', 25.00),
-    ('David', 'david@example.com', 'password123', 10.00);
+    ('Alice', 'alice@example.com', '$2a$12$Ql2L51UKSQlyPBLv5wy29.Ba23juBOZPxpt8qeY3jKkCWRJa56N2G', 100.00),
+    ('Bob', 'bob@example.com', '$2a$10$9Bdq1nPgoM4jBcIbWwF7u.CZq8gXa.T2A3lS0u8MtLFs/ds64.T.y', 50.00),
+    ('Charlie', 'charlie@example.com', '$2a$10$9Bdq1nPgoM4jBcIbWwF7u.CZq8gXa.T2A3lS0u8MtLFs/ds64.T.y', 25.00),
+    ('David', 'david@example.com', '$2a$10$9Bdq1nPgoM4jBcIbWwF7u.CZq8gXa.T2A3lS0u8MtLFs/ds64.T.y', 10.00);
 
 INSERT INTO user_relationships (user_id, relationship_id)
 VALUES
     (1, 2);
 
-
 INSERT INTO transactions (sender_id, receiver_id, description, amount)
 VALUES
-    (1, 2, 'Transaction between random friends', 15.00);
+    (1, 2, 'Transaction entre amis', 15.00);
