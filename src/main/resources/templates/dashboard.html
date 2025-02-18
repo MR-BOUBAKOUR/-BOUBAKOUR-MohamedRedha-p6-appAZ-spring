@@ -2,18 +2,83 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
     <title>Pay My Buddy - Dashboard</title>
 </head>
 <body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-primary mb-4">
+    <div class="container">
+        <a class="navbar-brand btn btn-warning" href="/dashboard">Pay My Buddy</a>
 
-    <div>
-        <h1>Pay My Buddy - Dashboard</h1>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/dashboard">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/transactions">Transactions</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-3 d-flex align-items-center">
+                    <span class="text-primary" th:text="${email}"></span>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-outline-primary">Se déconnecter</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
     </div>
+</nav>
 
-    <form th:action="@{/logout}" method="post">
-        <button type="submit" class="btn btn-secondary">Se déconnecter</button>
-    </form>
+<!-- Contenu principal -->
+<div class="container">
+    <div class="card p-4 border border-primary">
+        <h2 th:text="'Bienvenue sur votre Dashboard, ' + ${user.username} + ' !'"></h2>
+
+        <!-- Contenu spécifique au dashboard ici -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">Résumé de vos comptes</div>
+                    <div class="card-body">
+                        <p>Solde actuel: <strong>1000 €</strong></p>
+                        <a href="/account" class="btn btn-outline-primary btn-sm">Gérer mes comptes</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">Dernières transactions</div>
+                    <div class="card-body">
+                        <p>Aucune transaction récente</p>
+                        <a href="/transactions" class="btn btn-outline-primary btn-sm">Voir toutes les transactions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>
