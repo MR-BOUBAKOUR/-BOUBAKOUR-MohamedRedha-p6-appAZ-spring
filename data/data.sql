@@ -8,7 +8,7 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
-    balance DECIMAL(10, 2) NOT NULL,
+    balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     CONSTRAINT unique_email UNIQUE (email)
 );
 
