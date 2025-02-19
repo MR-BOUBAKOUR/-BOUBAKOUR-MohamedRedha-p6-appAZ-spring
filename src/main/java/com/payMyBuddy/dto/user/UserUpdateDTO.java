@@ -1,18 +1,8 @@
 package com.payMyBuddy.dto.user;
 
-import lombok.*;
 import jakarta.validation.constraints.*;
 
-import java.math.BigDecimal;
-
-@Setter @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class UserCreateDTO {
-
-    @Null(message = "ID should be null when creating a new user.")
-    private Integer id;
+public class UserUpdateDTO {
 
     @NotBlank(message = "Le username est obligatoire.")
     @Size(min = 3, max = 50, message = "Le username doit contenir entre 3 et 50 caractères.")
@@ -33,7 +23,4 @@ public class UserCreateDTO {
     public boolean isPasswordMatching() {
         return password != null && password.equals(confirmPassword);
     }
-
-    private BigDecimal balance = BigDecimal.ZERO;
-
 }

@@ -14,14 +14,27 @@
 
             <form th:action="@{/processSignup}" th:object="${user}" method="post">
                 <div class="form-group">
-                    <input type="text" id="username" th:field="${user.username}" class="form-control" placeholder="Username" required />
+                    <input type="text" id="username" th:field="${user.username}" class="form-control" placeholder="Username" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
                 </div>
+
                 <div class="form-group">
-                    <input type="email" id="email" th:field="${user.email}" class="form-control" placeholder="Mail" required />
+                    <input type="text" id="email" th:field="${user.email}" class="form-control" placeholder="Mail" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
                 </div>
+
                 <div class="form-group">
-                    <input type="password" id="password" th:field="${user.password}" class="form-control" placeholder="Mot de passe" required />
+                    <input type="password" id="password" th:field="${user.password}" class="form-control" placeholder="Mot de passe" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
                 </div>
+
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" placeholder="Confirmez le mot de passe" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></small>
+                </div>
+
+                <div class="text-danger mb-2" th:if="${#fields.hasErrors('passwordMatching')}" th:errors="*{passwordMatching}"></div>
+
                 <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
             </form>
 

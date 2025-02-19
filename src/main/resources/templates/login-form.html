@@ -20,6 +20,10 @@
                 Deconnecté avec succès.
             </div>
 
+            <div th:if="${param.success}" class="alert alert-success" role="alert">
+                Inscription réussie ! Vous pouvez vous connecter.
+            </div>
+
             <form th:action="@{/processLogin}" th:object="${user}" method="post">
                 <div class="form-group">
                     <input type="email" name="email" th:field="${user.email}" class="form-control" placeholder="Mail" required />

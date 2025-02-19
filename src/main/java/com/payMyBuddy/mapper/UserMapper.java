@@ -1,5 +1,6 @@
 package com.payMyBuddy.mapper;
 
+import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.model.User;
 import org.mapstruct.Mapper;
@@ -19,4 +20,5 @@ public interface UserMapper {
     }
 
     User toEntityFromResponseDTO(UserResponseDTO userResponseDTO);
+    User toEntityFromCreateDTO(UserCreateDTO userCreateDTO);
 }
