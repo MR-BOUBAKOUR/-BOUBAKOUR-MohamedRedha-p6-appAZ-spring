@@ -7,8 +7,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "users", schema = "pay_my_buddy")
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

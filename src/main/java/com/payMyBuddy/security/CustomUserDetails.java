@@ -1,7 +1,6 @@
 package com.payMyBuddy.security;
 
 import com.payMyBuddy.model.User;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,11 +9,8 @@ import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
-    @Getter
     private final Integer id;
-    @Getter
     private final String email;
-
     private final String username;
     private final String password;
 
@@ -25,9 +21,12 @@ public class CustomUserDetails implements UserDetails {
         this.password = user.getPassword();
     }
 
-    @Override
-    public String getPassword() {
-        return password;
+    public Integer getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     @Override
@@ -37,6 +36,11 @@ public class CustomUserDetails implements UserDetails {
 
     public String getActualUsername() {
         return username; // get the real username
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.payMyBuddy.service;
 
+import com.payMyBuddy.dto.user.UserResponseDTO;
+import com.payMyBuddy.mapper.UserMapper;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +12,17 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public Optional<User> findUserById(Integer id) {
-        return userRepository.findById(id);
+    @Autowired
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
+
+    public Optional<UserResponseDTO> findUserById(Integer id) {
+        return userMapper.toResponseDTO(userRepository.findById(id));
     }
 
     public void saveUser(User user) {

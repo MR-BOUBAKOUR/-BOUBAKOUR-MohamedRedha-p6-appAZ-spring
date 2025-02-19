@@ -1,5 +1,6 @@
 package com.payMyBuddy.controller;
 
+import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.security.CustomUserDetails;
 import com.payMyBuddy.service.UserService;
@@ -43,16 +44,7 @@ public class UserController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         model.addAttribute("email", userDetails.getEmail());
 
-        System.out.println("-----------------------------------------------------");
-        System.out.println(userDetails.getId());
-        System.out.println("-----------------------------------------------------");
-
-        Optional<User> user = userService.findUserById(userDetails.getId());
-
-        System.out.println("-----------------------------------------------------");
-        System.out.println(user.toString());
-        System.out.println("-----------------------------------------------------");
-
+        Optional<UserResponseDTO> user = userService.findUserById(userDetails.getId());
         model.addAttribute("user", user.orElse(null));
 
         return "dashboard";
