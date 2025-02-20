@@ -13,24 +13,26 @@
     <div class="container">
         <a class="navbar-brand btn btn-warning" href="/dashboard">Pay My Buddy</a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
-                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarContent">
+        <div class="navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="/dashboard">Accueil</a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="/transactions">Transactions</a>
+                    <a class="nav-link" href="/transfer">Faire un virement</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/deposit">Ajouter des fonds</a>
                 </li>
             </ul>
+
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item mr-3 d-flex align-items-center">
                     <span class="text-primary" th:text="${email}"></span>
                 </li>
+
                 <li class="nav-item">
                     <form th:action="@{/logout}" method="post">
                         <button type="submit" class="btn btn-outline-primary">Se déconnecter</button>
@@ -72,7 +74,7 @@
                             <p>Aucun compte associé à votre profil.</p>
                         </div>
 
-                        <a href="/account" class="btn btn-outline-primary btn-sm">Gérer mes comptes</a>
+                        <a href="/accounts" class="btn btn-outline-primary btn-sm">Gérer mes comptes</a>
                     </div>
                 </div>
             </div>

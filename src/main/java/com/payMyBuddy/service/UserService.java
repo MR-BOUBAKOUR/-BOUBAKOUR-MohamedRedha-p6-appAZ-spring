@@ -1,6 +1,5 @@
 package com.payMyBuddy.service;
 
-import com.payMyBuddy.controller.UserController;
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.mapper.UserMapper;

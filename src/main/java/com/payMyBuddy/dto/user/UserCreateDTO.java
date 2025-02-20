@@ -3,8 +3,6 @@ package com.payMyBuddy.dto.user;
 import lombok.*;
 import jakarta.validation.constraints.*;
 
-import java.math.BigDecimal;
-
 @Setter @Getter
 @NoArgsConstructor
 @AllArgsConstructor

@@ -3,7 +3,6 @@ package com.payMyBuddy.dto.user;
 import com.payMyBuddy.model.Account;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 @Setter @Getter

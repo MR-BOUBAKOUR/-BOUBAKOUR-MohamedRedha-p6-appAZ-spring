@@ -1,15 +1,15 @@
 package com.payMyBuddy.controller;
 
+import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.model.Account;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.security.CustomUserDetails;
+import com.payMyBuddy.service.AccountService;
 import com.payMyBuddy.service.UserService;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,10 +27,12 @@ import java.util.Set;
 public class UserController {
 
     private final UserService userService;
+    private final AccountService accountService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AccountService accountService) {
         this.userService = userService;
+        this.accountService = accountService;
     }
 
     @GetMapping("/login")
@@ -78,6 +80,60 @@ public class UserController {
         model.addAttribute("user", user.orElse(null));
 
         return "dashboard";
+    }
+
+    @GetMapping("/accounts")
+    public String showAccounts(Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        model.addAttribute("email", userDetails.getEmail());
+
+        Optional<UserResponseDTO> optionalUser = userService.findUserById(userDetails.getId());
+        if (optionalUser.isPresent()) {
+            UserResponseDTO user = optionalUser.get();
+            Set<Account> accounts = user.getAccounts();
+
+            model.addAttribute("user", user);
+            model.addAttribute("accounts", accounts);
+            model.addAttribute("createAccount", new AccountCreateDTO());
+
+        return "accounts";
+        }
+
+        return "redirect:/login";
+    }
+
+    @PostMapping("/createAccount")
+    public String createAccount(
+            @Valid @ModelAttribute("createAccount") AccountCreateDTO accountCreateDTO,
+            BindingResult bindingResult,
+            Model model
+    ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        model.addAttribute("email", userDetails.getEmail());
+
+        Optional<UserResponseDTO> optionalUser = userService.findUserById(userDetails.getId());
+        if (optionalUser.isEmpty()) {
+            return "redirect:/login";
+        }
+        UserResponseDTO user = optionalUser.get();
+
+        model.addAttribute("user", user);
+        model.addAttribute("accounts", user.getAccounts());
+
+        // If there are validation errors, return to the form with the populated model
+        if (bindingResult.hasErrors()) {
+            return "accounts";
+        }
+
+        accountService.createAccount(accountCreateDTO, userDetails.getId());
+
+        return "redirect:/accounts";
+
     }
 
     @GetMapping("/access-denied")
