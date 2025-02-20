@@ -15,7 +15,7 @@ public interface UserMapper {
             return Optional.empty();
         }
         User userEntity = user.get();
-        UserResponseDTO dto = new UserResponseDTO(userEntity.getId(), userEntity.getUsername(), userEntity.getEmail(), userEntity.getBalance());
+        UserResponseDTO dto = new UserResponseDTO(userEntity.getId(), userEntity.getUsername(), userEntity.getEmail());
         return Optional.of(dto);
     }
 

@@ -27,7 +27,7 @@ CREATE TABLE accounts (
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     type VARCHAR(50) NOT NULL,
-    CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 DROP TABLE IF EXISTS transactions;
@@ -45,10 +45,10 @@ CREATE TABLE transactions (
 
 INSERT INTO users (username, email, password)
 VALUES
-    ('Alice', 'alice@example.com', '$2a$12$Ql2L51UKSQlyPBLv5wy29.Ba23juBOZPxpt8qeY3jKkCWRJa56N2G'),
-    ('Bob', 'bob@example.com', '$2a$10$9Bdq1nPgoM4jBcIbWwF7u.CZq8gXa.T2A3lS0u8MtLFs/ds64.T.y'),
-    ('Charlie', 'charlie@example.com', '$2a$10$9Bdq1nPgoM4jBcIbWwF7u.CZq8gXa.T2A3lS0u8MtLFs/ds64.T.y'),
-    ('David', 'david@example.com', '$2a$10$9Bdq1nPgoM4jBcIbWwF7u.CZq8gXa.T2A3lS0u8MtLFs/ds64.T.y');
+    ('Alice', 'alice@example.com', '$2a$12$IHcw/w11QtHyvSsa/PkTcOxfU6y7ylauBe07d1ZIDaFWKeghOpHF6'),
+    ('Bob', 'bob@example.com', '$2a$12$x3INJ0gPAbgqn3Xz4gQtQOxbmwngp/uPE.yFg3bLHmJEYibCvHcre'),
+    ('Charlie', 'charlie@example.com', '$2a$12$WfggkW8z2STUMs1fsm0SouOFAgdtKwR5nZiQNe246ybMh/tGgNlma'),
+    ('David', 'david@example.com', '$2a$12$iZnlODlu9HDgV8GLfh.sQ.yTDP/1ObLUVOU8lVo4LrsUEu5gY6A0y');
 
 INSERT INTO accounts (user_id, balance, type)
 VALUES

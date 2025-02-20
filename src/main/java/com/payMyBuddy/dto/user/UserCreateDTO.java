@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @ToString
 public class UserCreateDTO {
 
-    @Null(message = "ID should be null when creating a new user.")
+    @Null(message = "L'ID doit être nul lors de la création de l'utilisateur.")
     private Integer id;
 
     @NotBlank(message = "Le username est obligatoire.")
@@ -33,7 +33,5 @@ public class UserCreateDTO {
     public boolean isPasswordMatching() {
         return password != null && password.equals(confirmPassword);
     }
-
-    private BigDecimal balance = BigDecimal.ZERO;
 
 }
