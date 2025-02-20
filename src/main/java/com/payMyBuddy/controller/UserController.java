@@ -1,4 +1,6 @@
+/*
 package com.payMyBuddy.controller;
+
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.user.UserCreateDTO;
@@ -142,6 +144,8 @@ public class UserController {
     }
 
 }
+
+ */
 
 /*
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);

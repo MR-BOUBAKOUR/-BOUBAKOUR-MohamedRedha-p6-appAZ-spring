@@ -29,7 +29,7 @@ public class User {
 
     @OneToMany(
             mappedBy = "user",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
     private Set<Account> accounts;
