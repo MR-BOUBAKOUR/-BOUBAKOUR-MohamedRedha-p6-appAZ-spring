@@ -3,6 +3,8 @@ package com.payMyBuddy.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "users", schema = "pay_my_buddy")
 @Getter @Setter
@@ -24,5 +26,12 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL
+    )
+    private Set<Account> accounts;
 
 }

@@ -25,8 +25,8 @@ CREATE TABLE accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     type VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
@@ -37,8 +37,8 @@ CREATE TABLE transactions (
     receiver_account_id INT NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     description VARCHAR(255),
+    type VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    transaction_type VARCHAR(50) NOT NULL,
     CONSTRAINT fk_sender_account FOREIGN KEY (sender_account_id) REFERENCES accounts(id),
     CONSTRAINT fk_receiver_account FOREIGN KEY (receiver_account_id) REFERENCES accounts(id)
 );
@@ -64,7 +64,7 @@ VALUES
     (2, 1),  -- Bob et Alice (relation bidirectionnelle potentielle ?)
     (1, 3);  -- Alice et Charlie
 
-INSERT INTO transactions (sender_account_id, receiver_account_id, amount, description, transaction_type)
+INSERT INTO transactions (sender_account_id, receiver_account_id, amount, description, type)
 VALUES
     (1, 2, 50.00, 'Transfert de compte personnel à compte business', 'transfer'),
     (1, 1, 100.00, 'Dépôt initial sur compte personnel', 'deposit'),

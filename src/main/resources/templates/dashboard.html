@@ -52,7 +52,26 @@
                 <div class="card mb-3">
                     <div class="card-header bg-primary text-white">Résumé de vos comptes</div>
                     <div class="card-body">
-                        <!-- <p th:utext="'Solde actuel: <strong>' + ${user.balance} + ' €</strong>'"></p> -->
+                        <div th:if="${user.accounts != null and !user.accounts.isEmpty()}">
+                            <div class="row">
+                                <div th:each="account : ${user.accounts}" class="col-md-12">
+                                    <div class="card mb-3 border-success">
+                                        <div class="card-header bg-success text-white">
+                                            <strong>Compte n° <span th:text="${account.id}"></span></strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>Votre solde : </strong><span th:text="${account.balance}"></span> €</p>
+                                            <p><strong>Type du compte : </strong><span th:text="${account.type}"></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${user.accounts == null or user.accounts.isEmpty()}">
+                            <p>Aucun compte associé à votre profil.</p>
+                        </div>
+
                         <a href="/account" class="btn btn-outline-primary btn-sm">Gérer mes comptes</a>
                     </div>
                 </div>

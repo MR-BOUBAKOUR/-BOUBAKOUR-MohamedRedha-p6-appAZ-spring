@@ -2,6 +2,7 @@ package com.payMyBuddy.controller;
 
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
+import com.payMyBuddy.model.Account;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.security.CustomUserDetails;
 import com.payMyBuddy.service.UserService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class UserController {
@@ -72,6 +74,7 @@ public class UserController {
         model.addAttribute("email", userDetails.getEmail());
 
         Optional<UserResponseDTO> user = userService.findUserById(userDetails.getId());
+
         model.addAttribute("user", user.orElse(null));
 
         return "dashboard";
