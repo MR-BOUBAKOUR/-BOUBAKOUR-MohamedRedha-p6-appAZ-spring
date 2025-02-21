@@ -51,4 +51,15 @@ public class AccountService {
 
         accountRepository.save(account);
     }
+
+    public void deleteAccount(Integer id) {
+
+        Optional<Account> accountOptional = accountRepository.findById(id);
+        if (accountOptional.isEmpty()) {
+            throw new RuntimeException("Account not found");
+        }
+        Account account = accountOptional.get();
+
+        accountRepository.delete(account);
+    }
 }

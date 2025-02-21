@@ -25,7 +25,7 @@ CREATE TABLE accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-    type VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES users (id)
 );
@@ -50,7 +50,7 @@ VALUES
     ('Charlie', 'charlie@example.com', '$2a$12$WfggkW8z2STUMs1fsm0SouOFAgdtKwR5nZiQNe246ybMh/tGgNlma'),
     ('David', 'david@example.com', '$2a$12$iZnlODlu9HDgV8GLfh.sQ.yTDP/1ObLUVOU8lVo4LrsUEu5gY6A0y');
 
-INSERT INTO accounts (user_id, balance, type)
+INSERT INTO accounts (user_id, balance, name)
 VALUES
     (1, 100.00, 'personal'),
     (1, 500.00, 'business'),

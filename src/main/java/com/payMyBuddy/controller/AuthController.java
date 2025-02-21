@@ -59,11 +59,4 @@ public class AuthController {
         userService.saveUser(userCreateDTO);
         return "redirect:/login?success=true";
     }
-
-    /*
-        @GetMapping("/access-denied")
-        public String showAccessDenied() {
-            return "access-denied";
-        }
-     */
 }

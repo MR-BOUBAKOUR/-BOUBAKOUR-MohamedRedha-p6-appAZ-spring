@@ -30,7 +30,7 @@
 
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item mr-3 d-flex align-items-center">
-                    <span class="text-primary" th:text="${email}"></span>
+                    <span class="text-primary" th:text="${user.email}"></span>
                 </li>
 
                 <li class="nav-item">
@@ -62,8 +62,8 @@
                                             <strong>Compte n° <span th:text="${account.id}"></span></strong>
                                         </div>
                                         <div class="card-body">
-                                            <p><strong>Votre solde : </strong><span th:text="${account.balance}"></span> €</p>
-                                            <p><strong>Type du compte : </strong><span th:text="${account.type}"></span></p>
+                                            <p class="mb-1"><strong>Nom du compte : </strong><span th:text="${account.name}"></span></p>
+                                            <p class="mb-1"><strong>Votre solde : </strong><span th:text="${account.balance}"></span> €</p>
                                         </div>
                                     </div>
                                 </div>

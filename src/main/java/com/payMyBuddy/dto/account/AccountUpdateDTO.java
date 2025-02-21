@@ -14,6 +14,6 @@ public class AccountUpdateDTO {
     private Integer id;
     private User user;
     private BigDecimal balance;
-    private String type;
+    private String name;
     private LocalDateTime createdAt;
 }

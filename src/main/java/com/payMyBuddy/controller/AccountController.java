@@ -1,9 +1,7 @@
 package com.payMyBuddy.controller;
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
-import com.payMyBuddy.dto.account.AccountResponseDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
-import com.payMyBuddy.model.Account;
 import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.AccountService;
 import com.payMyBuddy.service.UserService;
@@ -15,10 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Controller
 public class AccountController {
@@ -41,14 +39,12 @@ public class AccountController {
             return "redirect:/login";
         }
 
-        model.addAttribute("email", securityUtils.getCurrentUserEmail());
-
         Optional<UserResponseDTO> optionalUser = userService.findUserById(userId);
         if (optionalUser.isPresent()) {
             UserResponseDTO userResponseDTO = optionalUser.get();
+            model.addAttribute("createAccount", new AccountCreateDTO());
             model.addAttribute("user", userResponseDTO);
             model.addAttribute("accounts", userResponseDTO.getAccounts());
-            model.addAttribute("createAccount", new AccountCreateDTO());
             return "accounts";
         }
 
@@ -71,7 +67,6 @@ public class AccountController {
             Optional<UserResponseDTO> optionalUser = userService.findUserById(userId);
             if (optionalUser.isPresent()) {
                 UserResponseDTO userResponseDTO = optionalUser.get();
-                model.addAttribute("email", securityUtils.getCurrentUserEmail());
                 model.addAttribute("user", userResponseDTO);
                 model.addAttribute("accounts", userResponseDTO.getAccounts());
                 return "accounts";
@@ -81,6 +76,17 @@ public class AccountController {
         }
 
         accountService.createAccount(accountCreateDTO, userId);
+        return "redirect:/accounts";
+    }
+
+    @PostMapping("/account/delete/{id}")
+    public String deleteAccount(@PathVariable Integer id) {
+        Integer userId = securityUtils.getCurrentUserId();
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        accountService.deleteAccount(id);
         return "redirect:/accounts";
     }
 }

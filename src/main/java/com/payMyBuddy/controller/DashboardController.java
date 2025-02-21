@@ -30,8 +30,6 @@ public class DashboardController {
             return "redirect:/login";
         }
 
-        model.addAttribute("email", securityUtils.getCurrentUserEmail());
-
         Optional<UserResponseDTO> user = userService.findUserById(userId);
 
         model.addAttribute("user", user.orElse(null));
