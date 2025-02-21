@@ -1,5 +1,6 @@
 package com.payMyBuddy.dto.user;
 
+import com.payMyBuddy.dto.account.AccountResponseDTO;
 import com.payMyBuddy.model.Account;
 import lombok.*;
 
@@ -17,5 +18,5 @@ public class UserResponseDTO {
 
     private String email;
 
-    private Set<Account> accounts;
+    private Set<AccountResponseDTO> accounts;
 }

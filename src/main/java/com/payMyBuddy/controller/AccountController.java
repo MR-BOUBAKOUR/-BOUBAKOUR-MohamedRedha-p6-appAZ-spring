@@ -1,12 +1,15 @@
 package com.payMyBuddy.controller;
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
+import com.payMyBuddy.dto.account.AccountResponseDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.AccountService;
 import com.payMyBuddy.service.UserService;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +20,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class AccountController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private final UserService userService;
     private final AccountService accountService;
@@ -42,9 +48,19 @@ public class AccountController {
         Optional<UserResponseDTO> optionalUser = userService.findUserById(userId);
         if (optionalUser.isPresent()) {
             UserResponseDTO userResponseDTO = optionalUser.get();
+            Set<AccountResponseDTO> accountResponseDTO = userResponseDTO.getAccounts();
+
+            logger.info("-----------------------------------------------------------");
+            logger.info(userResponseDTO.toString());
+            logger.info("-----------------------------------------------------------");
+
+            logger.info("-----------------------------------------------------------");
+            logger.info(accountResponseDTO.toString());
+            logger.info("-----------------------------------------------------------");
+
             model.addAttribute("createAccount", new AccountCreateDTO());
             model.addAttribute("user", userResponseDTO);
-            model.addAttribute("accounts", userResponseDTO.getAccounts());
+            model.addAttribute("accounts", accountResponseDTO);
             return "accounts";
         }
 
@@ -61,8 +77,10 @@ public class AccountController {
         Optional<UserResponseDTO> optionalUser = userService.findUserById(userId);
         if (optionalUser.isPresent()) {
             UserResponseDTO userResponseDTO = optionalUser.get();
+            Set<AccountResponseDTO> accountResponseDTO = userResponseDTO.getAccounts();
+
             model.addAttribute("user", userResponseDTO);
-            model.addAttribute("accounts", userResponseDTO.getAccounts());
+            model.addAttribute("accounts", accountResponseDTO);
             return "deposit";
         }
 
@@ -85,8 +103,10 @@ public class AccountController {
             Optional<UserResponseDTO> optionalUser = userService.findUserById(userId);
             if (optionalUser.isPresent()) {
                 UserResponseDTO userResponseDTO = optionalUser.get();
+                Set<AccountResponseDTO> accountResponseDTO = userResponseDTO.getAccounts();
+
                 model.addAttribute("user", userResponseDTO);
-                model.addAttribute("accounts", userResponseDTO.getAccounts());
+                model.addAttribute("accounts", accountResponseDTO);
                 return "accounts";
             }
 

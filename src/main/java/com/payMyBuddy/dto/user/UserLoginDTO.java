@@ -1,11 +1,7 @@
 package com.payMyBuddy.dto.user;
 
-import com.payMyBuddy.model.Account;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
-import java.util.Set;
 
 @Setter
 @Getter

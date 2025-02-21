@@ -31,7 +31,7 @@ public class UserService {
     }
 
     public Optional<UserResponseDTO> findUserById(Integer id) {
-        return userMapper.toResponseDTO(userRepository.findById(id));
+        return userRepository.findById(id).map(userMapper::toResponseDTO);
     }
 
     public void createUser(UserCreateDTO userCreateDTO) {

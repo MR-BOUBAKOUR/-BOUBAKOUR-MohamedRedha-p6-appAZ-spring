@@ -12,20 +12,7 @@ import java.util.Optional;
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
 
-    default Optional<AccountResponseDTO> toResponseDTO(Optional<Account> account) {
-        if (account.isEmpty()) {
-            return Optional.empty();
-        }
-        Account accountEntity = account.get();
-        AccountResponseDTO dto = new AccountResponseDTO(
-                accountEntity.getId(),
-                accountEntity.getUser(),
-                accountEntity.getBalance(),
-                accountEntity.getName(),
-                accountEntity.getCreatedAt()
-        );
-        return Optional.of(dto);
-    }
+    AccountResponseDTO toResponseDTO(Account account);
 
     Account toEntityFromUpdateDTO(AccountUpdateDTO accountUpdateDTO);
     Account toEntityFromCreateDTO(AccountCreateDTO accountCreateDTO);

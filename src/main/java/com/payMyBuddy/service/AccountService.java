@@ -33,7 +33,7 @@ public class AccountService {
     }
 
     public Optional<AccountResponseDTO> findAccountById(Integer id) {
-        return accountMapper.toResponseDTO(accountRepository.findById(id));
+        return accountRepository.findById(id).map(accountMapper::toResponseDTO);
     }
 
     public void createAccount(AccountCreateDTO accountCreateDTO, Integer userId) {

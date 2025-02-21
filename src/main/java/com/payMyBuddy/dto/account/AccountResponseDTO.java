@@ -15,7 +15,6 @@ import java.util.Set;
 public class AccountResponseDTO {
 
     private Integer id;
-    private User user;
     private BigDecimal balance;
     private String name;
     private LocalDateTime createdAt;
