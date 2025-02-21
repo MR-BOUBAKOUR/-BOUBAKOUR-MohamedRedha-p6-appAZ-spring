@@ -2,6 +2,7 @@ package com.payMyBuddy.mapper;
 
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
+import com.payMyBuddy.dto.user.UserUpdateDTO;
 import com.payMyBuddy.model.User;
 import org.mapstruct.Mapper;
 
@@ -15,10 +16,15 @@ public interface UserMapper {
             return Optional.empty();
         }
         User userEntity = user.get();
-        UserResponseDTO dto = new UserResponseDTO(userEntity.getId(), userEntity.getUsername(), userEntity.getEmail(), userEntity.getAccounts());
+        UserResponseDTO dto = new UserResponseDTO(
+                userEntity.getId(),
+                userEntity.getUsername(),
+                userEntity.getEmail(),
+                userEntity.getAccounts()
+        );
         return Optional.of(dto);
     }
 
-    User toEntityFromResponseDTO(UserResponseDTO userResponseDTO);
+    User toEntityFromUpdateDTO(UserUpdateDTO userUpdateDTO);
     User toEntityFromCreateDTO(UserCreateDTO userCreateDTO);
 }

@@ -56,7 +56,7 @@ public class AuthController {
             return "signup-form";
         }
 
-        userService.saveUser(userCreateDTO);
+        userService.createUser(userCreateDTO);
         return "redirect:/login?success=true";
     }
 }

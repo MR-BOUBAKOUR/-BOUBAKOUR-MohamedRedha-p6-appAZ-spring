@@ -8,14 +8,14 @@
   <title>Pay My Buddy - Accounts</title>
 </head>
 <body>
-<!-- Navbar -->
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-primary mb-4">
   <div class="container">
     <a class="navbar-brand btn btn-warning" href="/dashboard">Pay My Buddy</a>
 
     <div class="navbar-collapse">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="/dashboard">Accueil</a>
         </li>
         <li class="nav-item">
@@ -40,7 +40,6 @@
   </div>
 </nav>
 
-<!-- Contenu principal -->
 <div class="container">
   <div class="card p-4 border border-primary">
     <div th:if="${user.accounts != null and !user.accounts.isEmpty()}">
@@ -49,21 +48,21 @@
         <thead class="bg-primary text-white">
         <tr class="text-center">
           <th>ID</th>
-          <th>Solde</th>
-          <th>Nom du compte</th>
           <th>Date de création</th>
+          <th>Nom du compte</th>
+          <th>Solde</th>
           <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="account : ${user.accounts}" class="text-center border-primary">
           <td th:text="${account.id}" class="align-middle border-primary"></td>
-          <td th:text="${account.balance}" class="align-middle border-primary"></td>
-          <td th:text="${account.name}" class="align-middle border-primary"></td>
           <td th:text="${account.createdAt}" class="align-middle border-primary"></td>
-          <td class="text-center align-middle border-primary" style="width: 8.33%"> <!-- 1/12 width -->
+          <td th:text="${account.name}" class="align-middle border-primary"></td>
+          <td th:text="${account.balance}" class="align-middle border-primary"></td>
+          <td class="text-center align-middle border-primary" style="width: 8%">
             <form th:action="@{/account/delete/{id}(id=${account.id})}" method="post"
-                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce compte ?');">
+                  onSubmit="return confirm('Voulez-vous vraiment supprimer ce compte ?');">
               <button type="submit" class="btn btn-danger btn-sm">X</button>
             </form>
           </td>
@@ -75,7 +74,7 @@
     <h2 class="mb-3">Ajouter un compte</h2>
     <form th:action="@{/createAccount}" th:object="${createAccount}" method="post" class="row">
       <div class="form-group col-md-8">
-        <input type="text" name="type" class="form-control" th:field="${createAccount.name}" placeholder="Entrez le nom du compte" required>
+        <input type="text" name="name" class="form-control" th:field="${createAccount.name}" placeholder="Entrez le nom du compte" required>
         <small class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
       </div>
       <div class="col-md-2">
@@ -85,7 +84,6 @@
   </div>
 </div>
 
-<!-- Scripts Bootstrap -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

@@ -51,6 +51,24 @@ public class AccountController {
         return "redirect:/login";
     }
 
+    @GetMapping("/deposit")
+    public String showDeposit(Model model) {
+        Integer userId = securityUtils.getCurrentUserId();
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        Optional<UserResponseDTO> optionalUser = userService.findUserById(userId);
+        if (optionalUser.isPresent()) {
+            UserResponseDTO userResponseDTO = optionalUser.get();
+            model.addAttribute("user", userResponseDTO);
+            model.addAttribute("accounts", userResponseDTO.getAccounts());
+            return "deposit";
+        }
+
+        return "redirect:/login";
+    }
+
     @PostMapping("/createAccount")
     public String createAccount(
             @Valid @ModelAttribute("createAccount") AccountCreateDTO accountCreateDTO,

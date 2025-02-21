@@ -34,14 +34,10 @@ public class UserService {
         return userMapper.toResponseDTO(userRepository.findById(id));
     }
 
-    public void saveUser(UserCreateDTO userCreateDTO) {
+    public void createUser(UserCreateDTO userCreateDTO) {
         User user = userMapper.toEntityFromCreateDTO(userCreateDTO);
-
-        logger.info("-------------------------------------------------------------------------");
-        logger.info(user.toString());
-        logger.info("-------------------------------------------------------------------------");
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         userRepository.save(user);
     }
 }

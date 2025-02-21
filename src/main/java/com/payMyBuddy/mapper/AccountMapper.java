@@ -2,6 +2,7 @@ package com.payMyBuddy.mapper;
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.account.AccountResponseDTO;
+import com.payMyBuddy.dto.account.AccountUpdateDTO;
 import com.payMyBuddy.model.Account;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,10 +17,16 @@ public interface AccountMapper {
             return Optional.empty();
         }
         Account accountEntity = account.get();
-        AccountResponseDTO dto = new AccountResponseDTO(accountEntity.getId(), accountEntity.getUser(), accountEntity.getBalance(), accountEntity.getName(), accountEntity.getCreatedAt());
+        AccountResponseDTO dto = new AccountResponseDTO(
+                accountEntity.getId(),
+                accountEntity.getUser(),
+                accountEntity.getBalance(),
+                accountEntity.getName(),
+                accountEntity.getCreatedAt()
+        );
         return Optional.of(dto);
     }
 
-    Account toEntityFromResponseDTO(AccountResponseDTO accountResponseDTO);
+    Account toEntityFromUpdateDTO(AccountUpdateDTO accountUpdateDTO);
     Account toEntityFromCreateDTO(AccountCreateDTO accountCreateDTO);
 }
