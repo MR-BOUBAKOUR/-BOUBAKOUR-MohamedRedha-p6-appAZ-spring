@@ -146,11 +146,3 @@ public class UserController {
 }
 
  */
-
-/*
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    logger.info("-------------------------------------------------------------------------");
-    logger.info(userCreateDTO.toString());
-    logger.info("-------------------------------------------------------------------------");
-*/

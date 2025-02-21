@@ -28,8 +28,8 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm(Authentication authentication, Model model) {
-        if (securityUtils.isAuthenticated(authentication)) {
+    public String showLoginForm(Model model) {
+        if (securityUtils.getCurrentUserId() != null) {
             return "redirect:/dashboard";
         }
 
@@ -38,8 +38,8 @@ public class AuthController {
     }
 
     @GetMapping("/signup")
-    public String showSignupForm(Authentication authentication, Model model) {
-        if (securityUtils.isAuthenticated(authentication)) {
+    public String showSignupForm(Model model) {
+        if (securityUtils.getCurrentUserId() != null) {
             return "redirect:/dashboard";
         }
 

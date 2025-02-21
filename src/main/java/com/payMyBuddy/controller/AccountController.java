@@ -1,7 +1,6 @@
 package com.payMyBuddy.controller;
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
-import com.payMyBuddy.dto.account.AccountResponseDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.AccountService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Controller
 public class AccountController {
@@ -44,47 +42,14 @@ public class AccountController {
         if (userId == null) {
             return "redirect:/login";
         }
-
-        Optional<UserResponseDTO> optionalUser = userService.findUserById(userId);
-        if (optionalUser.isPresent()) {
-            UserResponseDTO userResponseDTO = optionalUser.get();
-            Set<AccountResponseDTO> accountResponseDTO = userResponseDTO.getAccounts();
-
-            logger.info("-----------------------------------------------------------");
-            logger.info(userResponseDTO.toString());
-            logger.info("-----------------------------------------------------------");
-
-            logger.info("-----------------------------------------------------------");
-            logger.info(accountResponseDTO.toString());
-            logger.info("-----------------------------------------------------------");
-
-            model.addAttribute("createAccount", new AccountCreateDTO());
-            model.addAttribute("user", userResponseDTO);
-            model.addAttribute("accounts", accountResponseDTO);
-            return "accounts";
-        }
-
-        return "redirect:/login";
-    }
-
-    @GetMapping("/deposit")
-    public String showDeposit(Model model) {
-        Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
+        UserResponseDTO userResponseDTO = userService.findUserById(userId).orElse(null);
+        if (userResponseDTO == null) {
             return "redirect:/login";
         }
 
-        Optional<UserResponseDTO> optionalUser = userService.findUserById(userId);
-        if (optionalUser.isPresent()) {
-            UserResponseDTO userResponseDTO = optionalUser.get();
-            Set<AccountResponseDTO> accountResponseDTO = userResponseDTO.getAccounts();
-
-            model.addAttribute("user", userResponseDTO);
-            model.addAttribute("accounts", accountResponseDTO);
-            return "deposit";
-        }
-
-        return "redirect:/login";
+        model.addAttribute("createAccount", new AccountCreateDTO());
+        model.addAttribute("user", userResponseDTO);
+        return "accounts";
     }
 
     @PostMapping("/createAccount")
@@ -97,20 +62,14 @@ public class AccountController {
         if (userId == null) {
             return "redirect:/login";
         }
+        UserResponseDTO userResponseDTO = userService.findUserById(userId).orElse(null);
+        if (userResponseDTO == null) {
+            return "redirect:/login";
+        }
 
         if (bindingResult.hasErrors()) {
-
-            Optional<UserResponseDTO> optionalUser = userService.findUserById(userId);
-            if (optionalUser.isPresent()) {
-                UserResponseDTO userResponseDTO = optionalUser.get();
-                Set<AccountResponseDTO> accountResponseDTO = userResponseDTO.getAccounts();
-
-                model.addAttribute("user", userResponseDTO);
-                model.addAttribute("accounts", accountResponseDTO);
-                return "accounts";
-            }
-
-            return "redirect:/login";
+            model.addAttribute("user", userResponseDTO);
+            return "accounts";
         }
 
         accountService.createAccount(accountCreateDTO, userId);
@@ -126,5 +85,20 @@ public class AccountController {
 
         accountService.deleteAccount(id);
         return "redirect:/accounts";
+    }
+
+    @GetMapping("/deposit")
+    public String showDeposit(Model model) {
+        Integer userId = securityUtils.getCurrentUserId();
+        if (userId == null) {
+            return "redirect:/login";
+        }
+        UserResponseDTO userResponseDTO = userService.findUserById(userId).orElse(null);
+        if (userResponseDTO == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("user", userResponseDTO);
+        return "deposit";
     }
 }
