@@ -2,11 +2,13 @@ package com.payMyBuddy.service;
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.account.AccountResponseDTO;
+import com.payMyBuddy.dto.account.BalanceUpdateDTO;
 import com.payMyBuddy.mapper.AccountMapper;
 import com.payMyBuddy.model.Account;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.AccountRepository;
 import com.payMyBuddy.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +65,9 @@ public class AccountService {
         Account account = accountOptional.get();
 
         accountRepository.delete(account);
+    }
+
+    public void updateAccount(BalanceUpdateDTO balanceUpdateDTO) {
+        logger.warn(balanceUpdateDTO.toString());
     }
 }

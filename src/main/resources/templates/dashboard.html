@@ -20,11 +20,15 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/transfer">Faire un virement</a>
+                    <a class="nav-link" href="/contacts">Bénéficiaires</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/deposit">Ajouter des fonds</a>
+                    <a class="nav-link" href="/transactions">Virements</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/accounts">Mes comptes</a>
                 </li>
             </ul>
 
@@ -45,9 +49,27 @@
 
 <div class="container">
     <div class="card p-4 border border-primary">
-        <h2 th:text="'Bienvenue sur votre Dashboard, ' + ${user.username} + ' !'"></h2>
+        <h2 th:text="'Bienvenue sur votre compte ' + ${user.username} + ' !'"></h2>
 
         <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">Vos bénéficiaires</div>
+                    <div class="card-body">
+                        <p>Aucun bénéficiaires le moment.</p>
+                        <a href="/contacts" class="btn btn-outline-primary btn-sm">Gérer les bénéficiaires</a>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">Dernières transactions</div>
+                    <div class="card-body">
+                        <p>Aucune transaction récente.</p>
+                        <a href="/transactions" class="btn btn-outline-primary btn-sm">Voir toutes les transactions</a>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-md-6">
                 <div class="card mb-3">
                     <div class="card-header bg-primary text-white">Résumé de vos comptes</div>
@@ -61,7 +83,7 @@
                                         </div>
                                         <div class="card-body">
                                             <p class="mb-1"><strong>Nom du compte : </strong><span th:text="${account.name}"></span></p>
-                                            <p class="mb-1"><strong>Votre solde : </strong><span th:text="${account.balance}"></span> €</p>
+                                            <p class="mb-1"><strong>Solde disponible : </strong><span th:text="${account.balance}"></span> €</p>
                                         </div>
                                     </div>
                                 </div>
@@ -69,19 +91,10 @@
                         </div>
 
                         <div th:if="${user.accounts == null or user.accounts.isEmpty()}">
-                            <p>Aucun compte associé à votre profil.</p>
+                            <p>Créez votre premier compte pour commencer.</p>
                         </div>
 
-                        <a href="/accounts" class="btn btn-outline-primary btn-sm">Gérer mes comptes</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-header bg-primary text-white">Dernières transactions</div>
-                    <div class="card-body">
-                        <p>Aucune transaction récente</p>
-                        <a href="/transactions" class="btn btn-outline-primary btn-sm">Voir toutes les transactions</a>
+                        <a href="/accounts" class="btn btn-outline-primary btn-sm mr-2">Gérer les comptes</a>
                     </div>
                 </div>
             </div>

@@ -10,19 +10,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class TransactionController {
+public class ContactController {
 
     private final UserService userService;
     private final SecurityUtils securityUtils;
 
     @Autowired
-    public TransactionController(UserService userService, SecurityUtils securityUtils) {
+    public ContactController(UserService userService, SecurityUtils securityUtils) {
         this.userService = userService;
         this.securityUtils = securityUtils;
     }
 
-    @GetMapping("/transactions")
-    public String showTransaction(Model model) {
+    @GetMapping("/contacts")
+    public String showContacts(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
         if (userId == null) {
             return "redirect:/login";
@@ -31,6 +31,6 @@ public class TransactionController {
         UserResponseDTO userResponseDTO = userService.findUserById(userId);
 
         model.addAttribute("user", userResponseDTO);
-        return "transactions";
+        return "contacts";
     }
 }

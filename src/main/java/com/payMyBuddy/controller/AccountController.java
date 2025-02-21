@@ -1,6 +1,7 @@
 package com.payMyBuddy.controller;
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
+import com.payMyBuddy.dto.account.BalanceUpdateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.AccountService;
@@ -13,12 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AccountController {
@@ -48,6 +44,7 @@ public class AccountController {
         }
 
         model.addAttribute("createAccount", new AccountCreateDTO());
+        model.addAttribute("updateBalance", new BalanceUpdateDTO());
         model.addAttribute("user", userResponseDTO);
         return "accounts";
     }
@@ -66,7 +63,6 @@ public class AccountController {
         if (userResponseDTO == null) {
             return "redirect:/login";
         }
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", userResponseDTO);
             return "accounts";
@@ -76,19 +72,12 @@ public class AccountController {
         return "redirect:/accounts";
     }
 
-    @PostMapping("/account/delete/{id}")
-    public String deleteAccount(@PathVariable Integer id) {
-        Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
-
-        accountService.deleteAccount(id);
-        return "redirect:/accounts";
-    }
-
-    @GetMapping("/deposit")
-    public String showDeposit(Model model) {
+    @PutMapping("/accounts/deposit")
+    public String showDeposit(
+            @Valid @ModelAttribute("balanceUpdate") BalanceUpdateDTO balanceUpdateDTO,
+            BindingResult bindingResult,
+            Model model
+    ) {
         Integer userId = securityUtils.getCurrentUserId();
         if (userId == null) {
             return "redirect:/login";
@@ -97,8 +86,23 @@ public class AccountController {
         if (userResponseDTO == null) {
             return "redirect:/login";
         }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("user", userResponseDTO);
+            return "accounts";
+        }
 
-        model.addAttribute("user", userResponseDTO);
-        return "deposit";
+        accountService.updateAccount(balanceUpdateDTO);
+        return "redirect:/accounts";
+    }
+
+    @DeleteMapping("/accounts/{accountId}")
+    public String deleteAccount(@PathVariable Integer accountId) {
+        Integer userId = securityUtils.getCurrentUserId();
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        accountService.deleteAccount(accountId);
+        return "redirect:/accounts";
     }
 }
