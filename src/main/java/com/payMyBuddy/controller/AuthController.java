@@ -2,6 +2,7 @@ package com.payMyBuddy.controller;
 
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserLoginDTO;
+import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.UserService;
 
@@ -52,8 +53,16 @@ public class AuthController {
             @Valid @ModelAttribute("user") UserCreateDTO userCreateDTO,
             BindingResult bindingResult
     ) {
+        if (securityUtils.getCurrentUserId() != null) {
+            return "redirect:/dashboard";
+        }
+
         if (bindingResult.hasErrors()) {
             return "signup-form";
+        }
+
+        if (userService.existsByEmail(userCreateDTO.getEmail())) {
+            return "redirect:/signup?error=true";
         }
 
         userService.createUser(userCreateDTO);

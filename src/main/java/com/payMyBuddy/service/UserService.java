@@ -36,8 +36,13 @@ public class UserService {
                 .orElse(null);
     }
 
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     public void createUser(UserCreateDTO userCreateDTO) {
         User user = userMapper.toEntityFromCreateDTO(userCreateDTO);
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
