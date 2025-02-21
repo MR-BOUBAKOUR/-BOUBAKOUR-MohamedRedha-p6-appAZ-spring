@@ -32,8 +32,10 @@ public class AccountService {
         this.accountMapper = accountMapper;
     }
 
-    public Optional<AccountResponseDTO> findAccountById(Integer id) {
-        return accountRepository.findById(id).map(accountMapper::toResponseDTO);
+    public AccountResponseDTO findAccountById(Integer id) {
+        return accountRepository.findById(id)
+                .map(accountMapper::toResponseDTO)
+                .orElse(null);
     }
 
     public void createAccount(AccountCreateDTO accountCreateDTO, Integer userId) {

@@ -30,7 +30,7 @@ public class DashboardController {
             return "redirect:/login";
         }
 
-        UserResponseDTO userResponseDTO = userService.findUserById(userId).orElse(null);
+        UserResponseDTO userResponseDTO = userService.findUserById(userId);
 
         model.addAttribute("user", userResponseDTO);
         return "dashboard";

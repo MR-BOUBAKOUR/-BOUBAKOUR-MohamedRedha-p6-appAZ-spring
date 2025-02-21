@@ -30,8 +30,10 @@ public class UserService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public Optional<UserResponseDTO> findUserById(Integer id) {
-        return userRepository.findById(id).map(userMapper::toResponseDTO);
+    public UserResponseDTO findUserById(Integer id) {
+        return userRepository.findById(id)
+                .map(userMapper::toResponseDTO)
+                .orElse(null);
     }
 
     public void createUser(UserCreateDTO userCreateDTO) {

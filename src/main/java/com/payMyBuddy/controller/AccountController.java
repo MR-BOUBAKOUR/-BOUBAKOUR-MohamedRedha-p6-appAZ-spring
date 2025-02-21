@@ -42,7 +42,7 @@ public class AccountController {
         if (userId == null) {
             return "redirect:/login";
         }
-        UserResponseDTO userResponseDTO = userService.findUserById(userId).orElse(null);
+        UserResponseDTO userResponseDTO = userService.findUserById(userId);
         if (userResponseDTO == null) {
             return "redirect:/login";
         }
@@ -62,7 +62,7 @@ public class AccountController {
         if (userId == null) {
             return "redirect:/login";
         }
-        UserResponseDTO userResponseDTO = userService.findUserById(userId).orElse(null);
+        UserResponseDTO userResponseDTO = userService.findUserById(userId);
         if (userResponseDTO == null) {
             return "redirect:/login";
         }
@@ -93,7 +93,7 @@ public class AccountController {
         if (userId == null) {
             return "redirect:/login";
         }
-        UserResponseDTO userResponseDTO = userService.findUserById(userId).orElse(null);
+        UserResponseDTO userResponseDTO = userService.findUserById(userId);
         if (userResponseDTO == null) {
             return "redirect:/login";
         }
