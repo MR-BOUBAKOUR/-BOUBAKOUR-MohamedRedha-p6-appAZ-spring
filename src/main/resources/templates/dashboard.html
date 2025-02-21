@@ -49,14 +49,14 @@
 
 <div class="container">
     <div class="card p-4 border border-primary">
-        <h2 th:text="'Bienvenue sur votre compte ' + ${user.username} + ' !'"></h2>
+        <h2 class="mb-4" th:text="'Bienvenue sur votre compte ' + ${user.username} + ' !'"></h2>
 
-        <div class="row mt-4">
+        <div class="row">
             <div class="col-md-6">
                 <div class="card mb-3">
                     <div class="card-header bg-primary text-white">Vos bénéficiaires</div>
                     <div class="card-body">
-                        <p>Aucun bénéficiaires le moment.</p>
+                        <p>Aucun bénéficiaires pour le moment.</p>
                         <a href="/contacts" class="btn btn-outline-primary btn-sm">Gérer les bénéficiaires</a>
                     </div>
                 </div>

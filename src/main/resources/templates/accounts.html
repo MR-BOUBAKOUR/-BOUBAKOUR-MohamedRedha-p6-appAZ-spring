@@ -50,7 +50,7 @@
 <div class="container">
     <div class="card p-4 border border-primary">
         <div th:if="${user.accounts != null and !user.accounts.isEmpty()}">
-            <h2 class="mb-3">Mes Comptes</h2>
+            <h2 class="mb-4">Mes Comptes</h2>
 
             <table class="table table-bordered">
                 <thead class="bg-primary text-white">
@@ -80,7 +80,7 @@
                 </tbody>
             </table>
 
-            <h2 class="mb-3 mt-3">Rajouter des fonds</h2>
+            <h2 class="mb-3 mt-5">Rajouter des fonds</h2>
             <form th:action="@{/accounts/deposit}" th:object="${updateBalance}" method="post" class="mb-4">
                 <input type="hidden" name="_method" value="put" />
                 <div class="row">
@@ -115,7 +115,7 @@
             </form>
         </div>
 
-        <h2 class="mb-3">Ajouter un compte</h2>
+        <h2 class="mb-3">Créer un compte</h2>
         <form th:action="@{/createAccount}" th:object="${createAccount}" method="post" class="row">
             <div class="form-group col-md-10">
                 <input type="text" name="name" class="form-control" th:field="${createAccount.name}" placeholder="Entrez le nom du compte" required>
