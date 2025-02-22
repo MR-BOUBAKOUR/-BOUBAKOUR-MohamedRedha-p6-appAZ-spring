@@ -1,7 +1,9 @@
 package com.payMyBuddy.service;
 
+import com.payMyBuddy.dto.user.ContactCreateDTO;
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
+import com.payMyBuddy.exception.ResourceNotFoundException;
 import com.payMyBuddy.mapper.UserMapper;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.UserRepository;
@@ -11,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -32,8 +32,8 @@ public class UserService {
 
     public UserResponseDTO findUserById(Integer id) {
         return userRepository.findById(id)
-                .map(userMapper::toResponseDTO)
-                .orElse(null);
+            .map(userMapper::toResponseDTO)
+            .orElse(null);
     }
 
     public boolean existsByEmail(String email) {
@@ -46,5 +46,31 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
+    }
+
+    public void createContact(Integer userId, ContactCreateDTO contactCreateDTO) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User contact = userRepository.findByEmail(contactCreateDTO.getEmail())
+            .orElseThrow(() -> new ResourceNotFoundException("Contact not found"));
+
+        // bidirectional relation
+        user.addContact(contact);
+
+        userRepository.save(user);
+        userRepository.save(contact);
+    }
+
+    public void deleteContact(Integer userId, Integer contactId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User contact = userRepository.findById(contactId)
+                .orElseThrow(() -> new ResourceNotFoundException("Contact not found"));
+
+        // bidirectional relation
+        user.removeContact(contact);
+
+        userRepository.save(user);
+        userRepository.save(contact);
     }
 }

@@ -24,14 +24,15 @@ public class DashboardController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    public String showDashboard(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
         if (userId == null) {
             return "redirect:/login";
         }
-
         UserResponseDTO userResponseDTO = userService.findUserById(userId);
-
+        if (userResponseDTO == null) {
+            return "redirect:/login";
+        }
         model.addAttribute("user", userResponseDTO);
         return "dashboard";
     }

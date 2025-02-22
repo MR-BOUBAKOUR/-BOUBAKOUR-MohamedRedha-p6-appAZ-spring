@@ -10,7 +10,6 @@ import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.AccountRepository;
 import com.payMyBuddy.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -51,7 +49,7 @@ public class AccountService {
             .findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (accountRepository.existsByName(accountCreateDTO.getName())) {
+        if (accountRepository.existsByNameAndUser_Id(accountCreateDTO.getName(), userId)) {
             throw new RuntimeException("Account already exists");
         }
 

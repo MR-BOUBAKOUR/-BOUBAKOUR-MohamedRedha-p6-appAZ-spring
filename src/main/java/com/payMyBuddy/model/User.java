@@ -1,5 +1,6 @@
 package com.payMyBuddy.model;
 
+import com.payMyBuddy.exception.SelfAddContactException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,5 +34,30 @@ public class User {
             cascade = CascadeType.ALL
     )
     private Set<Account> accounts;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_contacts",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "contact_id")
+    )
+    private Set<User> contacts;
+
+    public void addContact(User contact) {
+        if (this.equals(contact)) {
+            throw new SelfAddContactException("Un utilisateur ne peut pas s'ajouter lui-même.");
+        }
+        if (!contacts.contains(contact)) {
+            contacts.add(contact);
+            contact.getContacts().add(this);
+        }
+    }
+
+    public void removeContact(User contact) {
+        if (contacts.contains(contact)) {
+            contacts.remove(contact);
+            contact.getContacts().remove(this);
+        }
+    }
 
 }

@@ -49,8 +49,46 @@
 
 <div class="container">
     <div class="card p-4 border border-primary mb-4">
-        <h2 class="mb-4">Mes Bénéficiaires</h2>
+        <div th:if="${user.contacts != null and !user.contacts.isEmpty()}">
+            <h2 class="mb-4">Mes Bénéficiaires</h2>
+            <table class="table table-bordered">
+                <thead class="bg-primary text-white">
+                <tr class="text-center">
+                    <th>ID</th>
+                    <th>Nom du bénéficiaire</th>
+                    <th>Email du bénéficiaire</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
 
+                <tbody>
+                <tr th:each="contact : ${user.contacts}" class="text-center border-primary">
+                    <td th:text="${contact.id}" class="align-middle border-primary"></td>
+                    <td th:text="${contact.username}" class="align-middle border-primary"></td>
+                    <td th:text="${contact.email}" class="align-middle border-primary"></td>
+                    <td class="text-center align-middle border-primary" style="width: 8%">
+                        <form th:action="@{/contacts/{id}(id=${contact.id})}" method="post"
+                              onsubmit="return confirm('Voulez-vous vraiment supprimer ce bénéficiaire ?');">
+                            <input type="hidden" name="_method" value="delete" />
+                            <button type="submit" class="btn btn-danger btn-sm">X</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="mb-3">Ajouter un bénéficiaire</h2>
+        <form th:action="@{/createContact}" th:object="${createContact}" method="post" class="row">
+            <div class="form-group col-md-10">
+                <input type="text" name="email" class="form-control" th:field="${createContact.email}" placeholder="Entrez le nom du bénéficiaire" required>
+                <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></small>
+                <small th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></small>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary align-middle w-100">Ajouter</button>
+            </div>
+        </form>
     </div>
 </div>
 

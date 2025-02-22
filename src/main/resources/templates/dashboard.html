@@ -56,7 +56,16 @@
                 <div class="card mb-3">
                     <div class="card-header bg-primary text-white">Vos bénéficiaires</div>
                     <div class="card-body">
-                        <p>Aucun bénéficiaires pour le moment.</p>
+                        <div th:if="${user.contacts != null and !user.contacts.isEmpty()}" class="d-flex flex-wrap gap-3 mb-3">
+                            <div th:each="contact : ${user.contacts}" class="mr-2 px-3 py-3 bg-light border rounded">
+                                <span th:text="${contact.username}"></span>
+                            </div>
+                        </div>
+
+                        <div th:if="${user.contacts == null or user.contacts.isEmpty()}">
+                            <p>Aucun bénéficiaires pour le moment.</p>
+                        </div>
+
                         <a href="/contacts" class="btn btn-outline-primary btn-sm">Gérer les bénéficiaires</a>
                     </div>
                 </div>

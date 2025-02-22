@@ -11,13 +11,13 @@ CREATE TABLE users (
     CONSTRAINT unique_email UNIQUE (email)
 );
 
-DROP TABLE IF EXISTS user_relationships;
-CREATE TABLE user_relationships (
+DROP TABLE IF EXISTS user_contacts;
+CREATE TABLE user_contacts (
     user_id INT NOT NULL,
-    relationship_id INT NOT NULL,
-    PRIMARY KEY (user_id, relationship_id),
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-    CONSTRAINT fk_relationship FOREIGN KEY (relationship_id) REFERENCES users (id) ON DELETE CASCADE
+    contact_id INT NOT NULL,
+    PRIMARY KEY (user_id, contact_id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT fk_contact FOREIGN KEY (contact_id) REFERENCES users (id)
 );
 
 DROP TABLE IF EXISTS accounts;
@@ -48,7 +48,8 @@ VALUES
     ('Alice', 'alice@example.com', '$2a$12$IHcw/w11QtHyvSsa/PkTcOxfU6y7ylauBe07d1ZIDaFWKeghOpHF6'),
     ('Bob', 'bob@example.com', '$2a$12$x3INJ0gPAbgqn3Xz4gQtQOxbmwngp/uPE.yFg3bLHmJEYibCvHcre'),
     ('Charlie', 'charlie@example.com', '$2a$12$WfggkW8z2STUMs1fsm0SouOFAgdtKwR5nZiQNe246ybMh/tGgNlma'),
-    ('David', 'david@example.com', '$2a$12$iZnlODlu9HDgV8GLfh.sQ.yTDP/1ObLUVOU8lVo4LrsUEu5gY6A0y');
+    ('David', 'david@example.com', '$2a$12$iZnlODlu9HDgV8GLfh.sQ.yTDP/1ObLUVOU8lVo4LrsUEu5gY6A0y'),
+    ('Redha', 'redha.boubakour@gmail.com', '$2a$10$LIpKVUajUvQvtyX9xWslYer7phf/6N/nswXS6jxRvvdIC1vg79qN.');
 
 INSERT INTO accounts (user_id, balance, name)
 VALUES
@@ -57,12 +58,6 @@ VALUES
     (2, 50.00, 'personal'),
     (3, 25.00, 'personal'),
     (4, 10.00, 'personal');
-
-INSERT INTO user_relationships (user_id, relationship_id)
-VALUES
-    (1, 2),  -- Alice et Bob
-    (2, 1),  -- Bob et Alice (relation bidirectionnelle potentielle ?)
-    (1, 3);  -- Alice et Charlie
 
 INSERT INTO transactions (sender_account_id, receiver_account_id, amount, description, type)
 VALUES

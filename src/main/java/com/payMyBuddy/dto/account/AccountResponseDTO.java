@@ -18,4 +18,5 @@ public class AccountResponseDTO {
     private BigDecimal balance;
     private String name;
     private LocalDateTime createdAt;
+
 }
