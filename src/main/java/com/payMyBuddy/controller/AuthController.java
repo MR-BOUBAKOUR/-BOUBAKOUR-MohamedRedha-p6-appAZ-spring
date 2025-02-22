@@ -60,7 +60,12 @@ public class AuthController {
         }
 
         if (userService.existsByEmail(userCreateDTO.getEmail())) {
-            return "redirect:/signup?error=true";
+            bindingResult.rejectValue(
+                    "email",
+                    "error.user",
+                    "Adresse email déjà utilisée. Veuillez en choisir une autre."
+            );
+            return "signup-form";
         }
 
         userService.createUser(userCreateDTO);

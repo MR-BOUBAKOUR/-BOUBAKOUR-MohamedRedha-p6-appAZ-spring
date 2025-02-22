@@ -3,6 +3,7 @@ package com.payMyBuddy.service;
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.account.AccountResponseDTO;
 import com.payMyBuddy.dto.account.BalanceUpdateDTO;
+import com.payMyBuddy.exception.ResourceNotFoundException;
 import com.payMyBuddy.mapper.AccountMapper;
 import com.payMyBuddy.model.Account;
 import com.payMyBuddy.model.User;
@@ -41,7 +42,7 @@ public class AccountService {
             .findById(accountId)
             .map(accountMapper::toResponseDTO)
             .orElseThrow(
-                    () -> new RuntimeException("Account not found")
+                    () -> new ResourceNotFoundException("Account not found")
             );
     }
 
@@ -50,7 +51,12 @@ public class AccountService {
             .findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (accountRepository.existsByName(accountCreateDTO.getName())) {
+            throw new RuntimeException("Account already exists");
+        }
+
         Account account = accountMapper.toEntityFromCreateDTO(accountCreateDTO);
+
         account.setUser(user);
         account.setBalance(BigDecimal.ZERO);
         account.setCreatedAt(LocalDateTime.now());
@@ -61,7 +67,7 @@ public class AccountService {
     public void deleteAccount(Integer accountId) {
         Account account = accountRepository
             .findById(accountId)
-            .orElseThrow(() -> new RuntimeException("Account not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
         accountRepository.delete(account);
     }
@@ -69,7 +75,7 @@ public class AccountService {
     public void updateBalanceAccount(BalanceUpdateDTO balanceUpdateDTO) {
         Account account = accountRepository
             .findById(balanceUpdateDTO.getAccountId())
-            .orElseThrow(() -> new RuntimeException("Account not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
         account.setBalance(
             account.getBalance()

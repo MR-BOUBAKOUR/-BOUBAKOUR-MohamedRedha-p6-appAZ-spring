@@ -13,7 +13,7 @@ public class AccountCreateDTO {
     private Integer id;
 
     @NotBlank(message = "Le nom est obligatoire.")
-    @Size(min = 6, message = "Le nom doit contenir au moins 6 caractères.")
+    @Size(min = 2, message = "Le nom doit contenir au moins 2 caractères.")
     private String name;
 
 }

@@ -12,10 +12,6 @@
         <div class="card p-4 border border-primary" style="width: 100%; max-width: 400px;">
             <a class="btn btn-warning mb-3" href="/login">Pay My Buddy</a>
 
-            <div th:if="${param.error}" class="alert alert-danger" role="alert">
-                Adresse email déjà utilisée. Veuillez en choisir une autre.
-            </div>
-
             <form th:action="@{/processSignup}" th:object="${user}" method="post">
                 <div class="form-group">
                     <input type="text" id="username" th:field="${user.username}" class="form-control" placeholder="Username" />
