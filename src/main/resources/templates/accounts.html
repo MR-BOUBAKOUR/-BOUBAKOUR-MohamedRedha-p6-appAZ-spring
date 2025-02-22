@@ -28,7 +28,7 @@
                 </li>
 
                 <li class="nav-item active">
-                    <a class="nav-link" href="/accounts">Mes comptes</a>
+                    <a class="nav-link" href="/accounts">Comptes</a>
                 </li>
             </ul>
 
@@ -48,7 +48,7 @@
 </nav>
 
 <div class="container">
-    <div class="card p-4 border border-primary">
+    <div class="card p-4 border border-primary mb-4">
         <div th:if="${user.accounts != null and !user.accounts.isEmpty()}">
             <h2 class="mb-4">Mes Comptes</h2>
 
@@ -99,11 +99,12 @@
 
                     <div class="form-group col-md-5">
                         <div class="input-group">
-                            <input type="number" name="amount" class="form-control" th:field="*{amount}" placeholder="Montant (ex : 5.00)" min="0.01" step="0.01" required>
+                            <input type="number" name="amount" class="form-control" th:field="*{amount}" placeholder="Montant (ex : 5.00)" required>
                             <div class="input-group-append">
                                 <span class="input-group-text">€</span>
                             </div>
                         </div>
+                        <small class="text-danger d-block mt-1" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></small>
                     </div>
 
                     <div class="col-md-2">

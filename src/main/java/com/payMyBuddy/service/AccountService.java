@@ -8,6 +8,7 @@ import com.payMyBuddy.model.Account;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.AccountRepository;
 import com.payMyBuddy.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AccountService {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
@@ -34,19 +36,19 @@ public class AccountService {
         this.accountMapper = accountMapper;
     }
 
-    public AccountResponseDTO findAccountById(Integer id) {
-        return accountRepository.findById(id)
-                .map(accountMapper::toResponseDTO)
-                .orElse(null);
+    public AccountResponseDTO findAccountById(Integer accountId) {
+        return accountRepository
+            .findById(accountId)
+            .map(accountMapper::toResponseDTO)
+            .orElseThrow(
+                    () -> new RuntimeException("Account not found")
+            );
     }
 
     public void createAccount(AccountCreateDTO accountCreateDTO, Integer userId) {
-
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
-        User user = userOptional.get();
+        User user = userRepository
+            .findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
         Account account = accountMapper.toEntityFromCreateDTO(accountCreateDTO);
         account.setUser(user);
@@ -56,18 +58,24 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public void deleteAccount(Integer id) {
-
-        Optional<Account> accountOptional = accountRepository.findById(id);
-        if (accountOptional.isEmpty()) {
-            throw new RuntimeException("Account not found");
-        }
-        Account account = accountOptional.get();
+    public void deleteAccount(Integer accountId) {
+        Account account = accountRepository
+            .findById(accountId)
+            .orElseThrow(() -> new RuntimeException("Account not found"));
 
         accountRepository.delete(account);
     }
 
-    public void updateAccount(BalanceUpdateDTO balanceUpdateDTO) {
-        logger.warn(balanceUpdateDTO.toString());
+    public void updateBalanceAccount(BalanceUpdateDTO balanceUpdateDTO) {
+        Account account = accountRepository
+            .findById(balanceUpdateDTO.getAccountId())
+            .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        account.setBalance(
+            account.getBalance()
+                    .add(balanceUpdateDTO.getAmount())
+        );
+
+        accountRepository.save(account);
     }
 }

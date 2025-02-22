@@ -65,6 +65,8 @@ public class AccountController {
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", userResponseDTO);
+            model.addAttribute("createAccount", accountCreateDTO);
+            model.addAttribute("updateBalance", new BalanceUpdateDTO());
             return "accounts";
         }
 
@@ -74,7 +76,7 @@ public class AccountController {
 
     @PutMapping("/accounts/deposit")
     public String showDeposit(
-            @Valid @ModelAttribute("balanceUpdate") BalanceUpdateDTO balanceUpdateDTO,
+            @Valid @ModelAttribute("updateBalance") BalanceUpdateDTO balanceUpdateDTO,
             BindingResult bindingResult,
             Model model
     ) {
@@ -88,10 +90,12 @@ public class AccountController {
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", userResponseDTO);
+            model.addAttribute("updateBalance", balanceUpdateDTO);
+            model.addAttribute("createAccount", new AccountCreateDTO());
             return "accounts";
         }
 
-        accountService.updateAccount(balanceUpdateDTO);
+        accountService.updateBalanceAccount(balanceUpdateDTO);
         return "redirect:/accounts";
     }
 
