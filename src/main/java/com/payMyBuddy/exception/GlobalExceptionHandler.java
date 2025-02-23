@@ -25,10 +25,21 @@ public class GlobalExceptionHandler {
         return "redirect:/contacts";
     }
 
+    @ExceptionHandler(ConflictException.class)
+    public String handleConflictException(ConflictException ex, RedirectAttributes redirectAttributes) {
+        logger.error(ex.getMessage());
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return "redirect:/accounts";
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public String handleResourceNotFoundException(ResourceNotFoundException ex, RedirectAttributes redirectAttributes) {
         logger.error(ex.getMessage());
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+
+        if (ex.getMessage().equals("Bénéficiaire non trouvé.")) {
+            return "redirect:/contacts";
+        }
         return "redirect:/error";
     }
 

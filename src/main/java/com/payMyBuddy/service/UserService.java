@@ -50,9 +50,9 @@ public class UserService {
 
     public void createContact(Integer userId, ContactCreateDTO contactCreateDTO) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
         User contact = userRepository.findByEmail(contactCreateDTO.getEmail())
-            .orElseThrow(() -> new ResourceNotFoundException("Contact not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Bénéficiaire non trouvé."));
 
         // bidirectional relation
         user.addContact(contact);
@@ -63,9 +63,9 @@ public class UserService {
 
     public void deleteContact(Integer userId, Integer contactId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
         User contact = userRepository.findById(contactId)
-                .orElseThrow(() -> new ResourceNotFoundException("Contact not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Bénéficiaire non trouvé."));
 
         // bidirectional relation
         user.removeContact(contact);

@@ -3,6 +3,7 @@ package com.payMyBuddy.service;
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.account.AccountResponseDTO;
 import com.payMyBuddy.dto.account.BalanceUpdateDTO;
+import com.payMyBuddy.exception.ConflictException;
 import com.payMyBuddy.exception.ResourceNotFoundException;
 import com.payMyBuddy.mapper.AccountMapper;
 import com.payMyBuddy.model.Account;
@@ -40,17 +41,17 @@ public class AccountService {
             .findById(accountId)
             .map(accountMapper::toResponseDTO)
             .orElseThrow(
-                    () -> new ResourceNotFoundException("Account not found")
+                    () -> new ResourceNotFoundException("Compte non trouvé.")
             );
     }
 
     public void createAccount(AccountCreateDTO accountCreateDTO, Integer userId) {
         User user = userRepository
             .findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé."));
 
         if (accountRepository.existsByNameAndUser_Id(accountCreateDTO.getName(), userId)) {
-            throw new RuntimeException("Account already exists");
+            throw new ConflictException("Vous avez déjà un compte avec ce nom. Veuillez en choisir un autre.");
         }
 
         Account account = accountMapper.toEntityFromCreateDTO(accountCreateDTO);
@@ -65,7 +66,7 @@ public class AccountService {
     public void deleteAccount(Integer accountId) {
         Account account = accountRepository
             .findById(accountId)
-            .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
 
         accountRepository.delete(account);
     }
@@ -73,7 +74,7 @@ public class AccountService {
     public void updateBalanceAccount(BalanceUpdateDTO balanceUpdateDTO) {
         Account account = accountRepository
             .findById(balanceUpdateDTO.getAccountId())
-            .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
 
         account.setBalance(
             account.getBalance()

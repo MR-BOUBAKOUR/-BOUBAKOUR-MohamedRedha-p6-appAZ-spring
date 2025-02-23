@@ -120,7 +120,8 @@
         <form th:action="@{/createAccount}" th:object="${createAccount}" method="post" class="row">
             <div class="form-group col-md-10">
                 <input type="text" name="name" class="form-control" th:field="${createAccount.name}" placeholder="Entrez le nom du compte" required>
-                <small class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></small>
+                <small th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></small>
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary align-middle w-100">Ajouter</button>

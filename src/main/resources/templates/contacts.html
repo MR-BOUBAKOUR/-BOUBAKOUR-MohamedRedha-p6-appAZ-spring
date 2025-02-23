@@ -63,11 +63,11 @@
 
                 <tbody>
                 <tr th:each="contact : ${user.contacts}" class="text-center border-primary">
-                    <td th:text="${contact.id}" class="align-middle border-primary"></td>
+                    <td th:text="${contact.contactId}" class="align-middle border-primary"></td>
                     <td th:text="${contact.email}" class="align-middle border-primary"></td>
                     <td th:text="${contact.username}" class="align-middle border-primary"></td>
                     <td class="text-center align-middle border-primary" style="width: 8%">
-                        <form th:action="@{/contacts/{id}(id=${contact.id})}" method="post"
+                        <form th:action="@{/contacts/{contactId}(contactId=${contact.contactId})}" method="post"
                               onsubmit="return confirm('Voulez-vous vraiment supprimer ce bénéficiaire ?');">
                             <input type="hidden" name="_method" value="delete" />
                             <button type="submit" class="btn btn-danger btn-sm">X</button>

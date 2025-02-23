@@ -8,7 +8,7 @@ import lombok.*;
 @ToString
 public class ContactResponseDTO {
 
-    private Integer id;
+    private Integer contactId;
     private String username;
     private String email;
 
