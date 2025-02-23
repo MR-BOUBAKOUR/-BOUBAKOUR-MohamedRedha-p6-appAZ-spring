@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Setter @Getter
@@ -18,5 +19,10 @@ public class AccountResponseDTO {
     private BigDecimal balance;
     private String name;
     private LocalDateTime createdAt;
+
+    public String getFormattedCreatedAt() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return createdAt != null ? createdAt.format(formatter) : null;
+    }
 
 }

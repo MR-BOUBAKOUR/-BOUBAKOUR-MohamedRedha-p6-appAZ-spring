@@ -9,6 +9,7 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 @Configuration
 public class AppConfig {
 
+    // for validation purpose, some characters weren't displayed correctly
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
@@ -17,6 +18,7 @@ public class AppConfig {
         return messageSource;
     }
 
+    // allow us to use the HTTP (PUT & DELETE) methods on forms
     @Bean
     public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
         return new HiddenHttpMethodFilter();

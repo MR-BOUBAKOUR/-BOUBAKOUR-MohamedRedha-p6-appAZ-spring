@@ -19,16 +19,16 @@
                     <a class="nav-link" href="/dashboard">Accueil</a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" href="/accounts">Comptes</a>
+                </li>
+
                 <li class="nav-item active">
                     <a class="nav-link" href="/contacts">Bénéficiaires</a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="/transactions">Virements</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/accounts">Comptes</a>
                 </li>
             </ul>
 
@@ -55,8 +55,8 @@
                 <thead class="bg-primary text-white">
                 <tr class="text-center">
                     <th>ID</th>
-                    <th>Nom du bénéficiaire</th>
                     <th>Email du bénéficiaire</th>
+                    <th>Nom du bénéficiaire</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -64,8 +64,8 @@
                 <tbody>
                 <tr th:each="contact : ${user.contacts}" class="text-center border-primary">
                     <td th:text="${contact.id}" class="align-middle border-primary"></td>
-                    <td th:text="${contact.username}" class="align-middle border-primary"></td>
                     <td th:text="${contact.email}" class="align-middle border-primary"></td>
+                    <td th:text="${contact.username}" class="align-middle border-primary"></td>
                     <td class="text-center align-middle border-primary" style="width: 8%">
                         <form th:action="@{/contacts/{id}(id=${contact.id})}" method="post"
                               onsubmit="return confirm('Voulez-vous vraiment supprimer ce bénéficiaire ?');">
@@ -81,7 +81,7 @@
         <h2 class="mb-3">Ajouter un bénéficiaire</h2>
         <form th:action="@{/createContact}" th:object="${createContact}" method="post" class="row">
             <div class="form-group col-md-10">
-                <input type="text" name="email" class="form-control" th:field="${createContact.email}" placeholder="Entrez le nom du bénéficiaire" required>
+                <input type="text" name="email" class="form-control" th:field="${createContact.email}" placeholder="Entrez le mail du bénéficiaire" required>
                 <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></small>
                 <small th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></small>
             </div>
