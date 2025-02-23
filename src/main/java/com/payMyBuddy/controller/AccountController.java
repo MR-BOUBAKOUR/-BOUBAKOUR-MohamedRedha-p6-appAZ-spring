@@ -51,9 +51,9 @@ public class AccountController {
 
     @PostMapping("/createAccount")
     public String createAccount(
-            @Valid @ModelAttribute("createAccount") AccountCreateDTO accountCreateDTO,
-            BindingResult bindingResult,
-            Model model
+        @Valid @ModelAttribute("createAccount") AccountCreateDTO accountCreateDTO,
+        BindingResult bindingResult,
+        Model model
     ) {
         Integer userId = securityUtils.getCurrentUserId();
         if (userId == null) {

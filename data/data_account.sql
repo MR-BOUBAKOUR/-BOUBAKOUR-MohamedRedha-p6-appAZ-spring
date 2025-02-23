@@ -61,4 +61,4 @@ VALUES
 
 INSERT INTO transactions (sender_account_id, receiver_account_id, amount, description, type)
 VALUES
-    (1, 2, 50.00, 'Transfert de compte personnel à compte business', 'transfer');
+    (1, 2, 50.00, 'Transfert de compte personnel à compte business', 'SELF_TRANSFER');

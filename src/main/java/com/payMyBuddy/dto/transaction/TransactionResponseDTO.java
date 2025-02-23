@@ -1,5 +1,6 @@
-package com.payMyBuddy.dto.account;
+package com.payMyBuddy.dto.transaction;
 
+import com.payMyBuddy.model.TransactionType;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -12,11 +13,14 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AccountResponseDTO {
+public class TransactionResponseDTO {
 
     private Integer id;
-    private BigDecimal balance;
-    private String name;
+    private Integer senderAccountId;
+    private Integer receiverAccountId;
+    private BigDecimal amount;
+    private String description;
+    private TransactionType type;
     private Instant createdAt;
 
     public String getFormattedCreatedAt() {
@@ -26,4 +30,5 @@ public class AccountResponseDTO {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return formatter.format(zdt);
     }
+
 }

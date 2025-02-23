@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "accounts", schema = "pay_my_buddy")
@@ -31,6 +33,12 @@ public class Account {
     private String name;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
+
+    @OneToMany(mappedBy = "senderAccount", fetch = FetchType.LAZY)
+    private Set<Transaction> sentTransactions;
+
+    @OneToMany(mappedBy = "receiverAccount", fetch = FetchType.LAZY)
+    private Set<Transaction> receivedTransactions;
 
 }

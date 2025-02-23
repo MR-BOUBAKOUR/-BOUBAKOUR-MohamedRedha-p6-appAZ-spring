@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -32,7 +34,7 @@ public class UserService {
 
     public UserResponseDTO findUserById(Integer id) {
         return userRepository.findById(id)
-            .map(userMapper::toResponseDTO)
+            .map(userMapper::toUserResponseDTO)
             .orElse(null);
     }
 

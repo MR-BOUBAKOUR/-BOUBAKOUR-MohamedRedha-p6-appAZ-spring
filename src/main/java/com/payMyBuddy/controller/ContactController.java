@@ -61,8 +61,8 @@ public class ContactController {
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", userResponseDTO);
             model.addAttribute("createContact", contactCreateDTO);
+            model.addAttribute("user", userResponseDTO);
             return "contacts";
         }
 
