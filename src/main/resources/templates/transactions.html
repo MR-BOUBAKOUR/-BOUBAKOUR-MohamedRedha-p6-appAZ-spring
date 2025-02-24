@@ -33,9 +33,8 @@
 
 <div class="container">
     <div class="card p-4 border border-primary mb-4">
-        <h2 class="mb-4">Mes Virements</h2>
-
-        <div th:if="${transactions != null}">
+        <div th:if="${transactions != null and !transactions.isEmpty()}" class="mb-4">
+            <h2 class="mb-4">Mes Virements</h2>
             <table class="table table-bordered">
                 <thead class="bg-primary text-white">
                 <tr class="text-center">
@@ -62,7 +61,7 @@
             </table>
         </div>
 
-        <h2 class="mb-4 mt-5">Effectuer un Virement</h2>
+        <h2 class="mb-3">Effectuer un Virement</h2>
         <form th:action="@{/createTransaction}" th:object="${transactionCreate}" method="post">
             <div class="row">
                 <div class="form-group col-md-4">
@@ -80,7 +79,7 @@
                         <th:block th:each="receiver : ${receiversAccounts}">
                             <!-- Boucle sur les comptes du contact -->
                             <option th:each="account : ${receiver.accounts}" th:value="${account.id}"
-                                    th:text="${receiver.ownerName} + ' - ' + ${account.name}">
+                                    th:text="${receiver.ownerName == user.username ? '--- ' + receiver.ownerName : receiver.ownerName} + ' - ' + ${account.name}">
                             </option>
                         </th:block>
 
