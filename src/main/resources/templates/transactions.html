@@ -67,17 +67,20 @@
                 <div class="form-group col-md-4">
                     <select id="senderAccountId" class="form-control" th:field="*{senderAccountId}" required>
                         <option value="" selected>Sélectionnez un compte émetteur</option>
-                        <option th:each="account : ${user.accounts}" th:text="${account.name}" th:value="${account.id}"></option>
+                        <option th:each="account : ${user.accounts}" th:value="${account.id}"
+                                th:text="${account.name} + ' (solde actuel : ' + ${account.balance} + ')'">
+                        </option>">
+
+                        </option>
                     </select>
                 </div>
 
                 <div class="form-group col-md-4">
                     <select id="receiverAccountId" class="form-control" th:field="*{receiverAccountId}" required>
                         <option value="" selected>Sélectionnez un compte récepteur</option>
-
                         <!-- Boucle sur les récepteurs -->
                         <th:block th:each="receiver : ${receiversAccounts}">
-                            <!-- Boucle sur les comptes du contact -->
+                            <!-- Boucle sur les comptes de chaque récepteur -->
                             <option th:each="account : ${receiver.accounts}" th:value="${account.id}"
                                     th:text="${receiver.ownerName == user.username ? '--- ' + receiver.ownerName : receiver.ownerName} + ' - ' + ${account.name}">
                             </option>

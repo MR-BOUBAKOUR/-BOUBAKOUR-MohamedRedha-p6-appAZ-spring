@@ -38,12 +38,9 @@ public class AccountService {
     private final AccountMapper accountMapper;
 
     public AccountResponseDTO findAccountById(Integer accountId) {
-        return accountRepository
-                .findById(accountId)
-                .map(accountMapper::toResponseDTO)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Compte non trouvé.")
-                );
+        return accountRepository.findById(accountId)
+                .map(accountMapper::toAccountResponseDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
     }
 
     public void createAccount(AccountCreateDTO accountCreateDTO, Integer userId) {
@@ -96,7 +93,7 @@ public class AccountService {
         // Créer une liste pour les comptes de l'utilisateur
         List<AccountResponseDTO> selfAccountsResponseDTO =
                 accountRepository.findByUserId(userId).stream()
-                        .map(accountMapper::toResponseDTO)
+                        .map(accountMapper::toAccountResponseDTO)
                         .toList();
 
         // Ajout des comptes de l'utilisateur connecté
@@ -110,7 +107,7 @@ public class AccountService {
                         .map(contact -> {
                             Set<Account> accounts = accountRepository.findByUserId(contact.getContactId());
                             List<AccountResponseDTO> beneficiaryAccountsResponseDTO = accounts.stream()
-                                    .map(accountMapper::toResponseDTO)
+                                    .map(accountMapper::toAccountResponseDTO)
                                     .toList();
 
                             return new ReceiversAccountsResponseDTO(

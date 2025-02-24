@@ -9,7 +9,10 @@ import com.payMyBuddy.model.Transaction;
 import com.payMyBuddy.model.TransactionType;
 import com.payMyBuddy.repository.AccountRepository;
 import com.payMyBuddy.repository.TransactionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -17,8 +20,11 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TransactionService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
@@ -34,23 +40,37 @@ public class TransactionService {
 
     }
 
-    public void createTransaction(Integer userId, TransactionCreateDTO transactionCreateDTO) {
-        Account sender = accountRepository.findById(userId)
+    public void createTransaction(TransactionCreateDTO transactionCreateDTO) {
+        Account senderAccount = accountRepository.findById(transactionCreateDTO.getSenderAccountId())
             .orElseThrow(() -> new ResourceNotFoundException("Compte émetteur non trouvé"));
-        Account receiver = accountRepository.findById(transactionCreateDTO.getReceiverAccountId())
+        Account receiverAccount = accountRepository.findById(transactionCreateDTO.getReceiverAccountId())
             .orElseThrow(() -> new ResourceNotFoundException("Compte récepteur non trouvé"));
 
         Transaction transaction = transactionMapper.toEntityFromCreateDTO(transactionCreateDTO);
 
-        transaction.setSenderAccount(sender);
-        transaction.setReceiverAccount(receiver);
+        transaction.setSenderAccount(senderAccount);
+        transaction.setReceiverAccount(receiverAccount);
         transaction.setType(
-                sender.getId().equals(receiver.getId())
-                    ? TransactionType.SELF_TRANSFER
-                    : TransactionType.BENEFICIARY_TRANSFER
+            senderAccount.getUser().getId().equals(receiverAccount.getUser().getId())
+                ? TransactionType.SELF_TRANSFER
+                : TransactionType.BENEFICIARY_TRANSFER
         );
         transaction.setCreatedAt(Instant.now());
 
         transactionRepository.save(transaction);
+
+        senderAccount.setBalance(
+            senderAccount.getBalance()
+                .subtract(
+                    transaction.getAmount()
+                ));
+        receiverAccount.setBalance(receiverAccount
+            .getBalance()
+                .add(
+                    transaction.getAmount()
+            ));
+
+        accountRepository.save(receiverAccount);
+        accountRepository.save(senderAccount);
     }
 }

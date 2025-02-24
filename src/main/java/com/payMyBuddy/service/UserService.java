@@ -32,10 +32,10 @@ public class UserService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public UserResponseDTO findUserById(Integer id) {
-        return userRepository.findById(id)
+    public UserResponseDTO findUserById(Integer userId) {
+        return userRepository.findById(userId)
             .map(userMapper::toUserResponseDTO)
-            .orElse(null);
+            .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
     public boolean existsByEmail(String email) {

@@ -74,7 +74,7 @@ public class TransactionController {
             return "transactions";
         }
 
-        transactionService.createTransaction(userId, transactionCreateDTO);
+        transactionService.createTransaction(transactionCreateDTO);
         return "redirect:/transactions";
     }
 }
