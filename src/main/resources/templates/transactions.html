@@ -75,13 +75,19 @@
                 <div class="form-group col-md-4">
                     <select id="receiverAccountId" class="form-control" th:field="*{receiverAccountId}" required>
                         <option value="" selected>Sélectionnez un compte récepteur</option>
-                        <option
-                            th:each="account : ${contactsAccounts}"
-                            th:text="${account.ownerName} + ' - ' + ${account.name}"
-                            th:value="${account.id}">
-                        </option>
+
+                        <!-- Boucle sur les contacts -->
+                        <th:block th:each="contact : ${contactsAccounts}">
+                            <!-- Boucle sur les comptes du contact -->
+                            <option th:each="account : ${contact.accounts}"
+                                    th:value="${account.id}"
+                                    th:text="${contact.contactName} + ' - ' + ${account.name}">
+                            </option>
+                        </th:block>
+
                     </select>
                 </div>
+
 
                 <div class="form-group col-md-4">
                     <div class="input-group">

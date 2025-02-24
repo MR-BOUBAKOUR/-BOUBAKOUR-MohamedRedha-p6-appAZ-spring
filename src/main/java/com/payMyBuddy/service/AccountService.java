@@ -3,6 +3,8 @@ package com.payMyBuddy.service;
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.account.AccountResponseDTO;
 import com.payMyBuddy.dto.account.BalanceUpdateDTO;
+import com.payMyBuddy.dto.user.ContactAccountsResponseDTO;
+import com.payMyBuddy.dto.user.ContactResponseDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.exception.ConflictException;
 import com.payMyBuddy.exception.ResourceNotFoundException;
@@ -15,13 +17,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -83,7 +85,42 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public List<AccountResponseDTO> findContactsAccountsForUser(Integer userId) {
-        return null;
+    public List<ContactAccountsResponseDTO> findContactsAccountsForUser(Integer userId) {
+
+        UserResponseDTO userResponseDTO = userService.findUserById(userId);
+
+        logger.warn("-----------------------------------------------------");
+        logger.warn("userResponseDTO: {}", userResponseDTO);
+        logger.warn("-----------------------------------------------------");
+
+        Set<ContactResponseDTO> contactsResponseDTO = userResponseDTO.getContacts();
+
+        logger.warn("-----------------------------------------------------");
+        logger.warn("contactsResponseDTO: {}", contactsResponseDTO);
+        logger.warn("-----------------------------------------------------");
+
+        List<ContactAccountsResponseDTO> contactsAccountsResponseDTO = contactsResponseDTO.stream()
+                .map(contact -> {
+
+                    Set<Account> accounts = accountRepository.findByUserId(contact.getContactId());
+
+                    List<AccountResponseDTO> accountsResponseDTO = accounts.stream()
+                            .map(accountMapper::toResponseDTO)
+                            .toList();
+
+                    return new ContactAccountsResponseDTO(
+                            contact.getUsername(),
+                            accountsResponseDTO
+                    );
+                })
+                .toList();
+
+        logger.warn("-----------------------------------------------------");
+        logger.warn("contactsAccountsResponseDTO: {}", contactsAccountsResponseDTO);
+        logger.warn("-----------------------------------------------------");
+
+        return contactsAccountsResponseDTO;
+
+
     }
 }

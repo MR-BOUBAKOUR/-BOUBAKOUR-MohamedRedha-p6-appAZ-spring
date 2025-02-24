@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
@@ -14,4 +15,5 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     boolean existsByNameAndUser_Id(String name, Integer userId);
 
+    Set<Account> findByUserId(Integer userId);
 }

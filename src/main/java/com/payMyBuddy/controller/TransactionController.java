@@ -1,9 +1,9 @@
 package com.payMyBuddy.controller;
 
-import com.payMyBuddy.dto.account.AccountCreateDTO;
-import com.payMyBuddy.dto.account.BalanceUpdateDTO;
 import com.payMyBuddy.dto.transaction.TransactionCreateDTO;
 import com.payMyBuddy.dto.transaction.TransactionResponseDTO;
+import com.payMyBuddy.dto.user.ContactAccountsResponseDTO;
+import com.payMyBuddy.dto.user.ContactResponseDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.dto.account.AccountResponseDTO;
 import com.payMyBuddy.security.SecurityUtils;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -42,7 +43,7 @@ public class TransactionController {
         }
 
         List<TransactionResponseDTO> transactions = transactionService.findTransactionsForCurrentUser(userId);
-        List<AccountResponseDTO> contactsAccounts = accountService.findContactsAccountsForUser(userId);
+        List<ContactAccountsResponseDTO> contactsAccounts = accountService.findContactsAccountsForUser(userId);
 
         model.addAttribute("transactionCreate", new TransactionCreateDTO());
         model.addAttribute("transactions", transactions);
@@ -67,11 +68,11 @@ public class TransactionController {
         }
         if (bindingResult.hasErrors()) {
             List<TransactionResponseDTO> transactions = transactionService.findTransactionsForCurrentUser(userId);
-            List<AccountResponseDTO> contactsAccounts = accountService.findContactsAccountsForUser(userId);
-
+            List<ContactAccountsResponseDTO> contactsAccounts = accountService.findContactsAccountsForUser(userId);
+            
+            model.addAttribute("transactionCreate", transactionCreateDTO);
             model.addAttribute("transactions", transactions);
             model.addAttribute("contactsAccounts", contactsAccounts);
-            model.addAttribute("transactionCreate", transactionCreateDTO);
             model.addAttribute("user", userResponseDTO);
             return "transactions";
         }
