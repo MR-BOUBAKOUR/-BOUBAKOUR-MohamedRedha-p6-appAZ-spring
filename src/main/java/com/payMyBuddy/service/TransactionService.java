@@ -2,7 +2,9 @@ package com.payMyBuddy.service;
 
 import com.payMyBuddy.dto.transaction.TransactionCreateDTO;
 import com.payMyBuddy.dto.transaction.TransactionResponseDTO;
+import com.payMyBuddy.exception.InsufficientBalanceException;
 import com.payMyBuddy.exception.ResourceNotFoundException;
+import com.payMyBuddy.exception.SelfSendingAmountException;
 import com.payMyBuddy.mapper.TransactionMapper;
 import com.payMyBuddy.model.Account;
 import com.payMyBuddy.model.Transaction;
@@ -17,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -48,6 +49,14 @@ public class TransactionService {
 
         Transaction transaction = transactionMapper.toEntityFromCreateDTO(transactionCreateDTO);
 
+        if (senderAccount.getId().equals(receiverAccount.getId())) {
+            throw new SelfSendingAmountException("Virement interdit sur le même compte .");
+        }
+        if (senderAccount.getBalance().compareTo(transaction.getAmount()) < 0) {
+            throw new InsufficientBalanceException("Solde insuffisant. Veuillez alimenter votre compte.");
+        }
+
+        // the transaction part
         transaction.setSenderAccount(senderAccount);
         transaction.setReceiverAccount(receiverAccount);
         transaction.setType(
@@ -59,6 +68,7 @@ public class TransactionService {
 
         transactionRepository.save(transaction);
 
+        // updating of the accounts
         senderAccount.setBalance(
             senderAccount.getBalance()
                 .subtract(

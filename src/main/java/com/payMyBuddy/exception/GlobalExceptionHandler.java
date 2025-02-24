@@ -14,7 +14,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InsufficientBalanceException.class)
     public String handleInsufficientBalanceException(InsufficientBalanceException ex, RedirectAttributes redirectAttributes) {
         logger.warn(ex.getMessage());
-        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        redirectAttributes.addFlashAttribute("errorMessage1", ex.getMessage());
+        return "redirect:/transactions";
+    }
+
+    @ExceptionHandler(SelfSendingAmountException.class)
+    public String handleSelfSendingAmountException(SelfSendingAmountException ex, RedirectAttributes redirectAttributes) {
+        logger.warn(ex.getMessage());
+        redirectAttributes.addFlashAttribute("errorMessage2", ex.getMessage());
         return "redirect:/transactions";
     }
 

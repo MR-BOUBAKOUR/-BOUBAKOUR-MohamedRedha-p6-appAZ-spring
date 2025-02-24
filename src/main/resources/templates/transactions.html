@@ -70,9 +70,8 @@
                         <option th:each="account : ${user.accounts}" th:value="${account.id}"
                                 th:text="${account.name} + ' (solde actuel : ' + ${account.balance} + ')'">
                         </option>">
-
-                        </option>
                     </select>
+                    <small th:if="${errorMessage2}" th:text="${errorMessage2}" class="text-danger"></small>
                 </div>
 
                 <div class="form-group col-md-4">
@@ -96,6 +95,7 @@
                         <div class="input-group-append"><span class="input-group-text">€</span></div>
                     </div>
                     <small class="text-danger" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></small>
+                    <small th:if="${errorMessage1}" th:text="${errorMessage1}" class="text-danger"></small>
                 </div>
             </div>
             <div class="row">
