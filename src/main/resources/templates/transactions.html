@@ -76,12 +76,11 @@
                     <select id="receiverAccountId" class="form-control" th:field="*{receiverAccountId}" required>
                         <option value="" selected>Sélectionnez un compte récepteur</option>
 
-                        <!-- Boucle sur les contacts -->
-                        <th:block th:each="contact : ${contactsAccounts}">
+                        <!-- Boucle sur les récepteurs -->
+                        <th:block th:each="receiver : ${receiversAccounts}">
                             <!-- Boucle sur les comptes du contact -->
-                            <option th:each="account : ${contact.accounts}"
-                                    th:value="${account.id}"
-                                    th:text="${contact.contactName} + ' - ' + ${account.name}">
+                            <option th:each="account : ${receiver.accounts}" th:value="${account.id}"
+                                    th:text="${receiver.ownerName} + ' - ' + ${account.name}">
                             </option>
                         </th:block>
 
