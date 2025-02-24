@@ -84,40 +84,38 @@ public class AccountService {
 
     public List<ReceiversAccountsResponseDTO> findAccountsForCurrentUserAndHisContacts(Integer userId) {
 
-        UserResponseDTO userResponseDTO = userService.findUserById(userId);
-        Set<ContactResponseDTO> contactsResponseDTO = userResponseDTO.getContacts();
+        List<ReceiversAccountsResponseDTO> allAccountsDTO = new ArrayList<>();
 
-        // Création d'une liste pour tous les contacts et leurs comptes
-        List<ReceiversAccountsResponseDTO> accountsDTO = new ArrayList<>();
+        UserResponseDTO currentUser = userService.findUserById(userId);
+        List<AccountResponseDTO> selfAccounts =
+            accountRepository.findByUserId(userId).stream()
+                .map(accountMapper::toAccountResponseDTO)
+                .toList();
 
-        // Créer une liste pour les comptes de l'utilisateur
-        List<AccountResponseDTO> selfAccountsResponseDTO =
-                accountRepository.findByUserId(userId).stream()
+        allAccountsDTO.add(
+            new ReceiversAccountsResponseDTO(
+                currentUser.getUsername(),
+                selfAccounts
+        ));
+
+        Set<ContactResponseDTO> contacts = currentUser.getContacts();
+        allAccountsDTO.addAll(
+            contacts.stream()
+                .map(contact -> {
+
+                    Set<Account> accounts = accountRepository.findByUserId(contact.getContactId());
+                    List<AccountResponseDTO> beneficiaryAccounts = accounts.stream()
                         .map(accountMapper::toAccountResponseDTO)
                         .toList();
 
-        // Ajout des comptes de l'utilisateur connecté
-        accountsDTO.add(new ReceiversAccountsResponseDTO(
-                userResponseDTO.getUsername(), // Nom de l'utilisateur connecté
-                selfAccountsResponseDTO       // Ses comptes
-        ));
-        // Ajout des comptes des contacts
-        accountsDTO.addAll(
-                contactsResponseDTO.stream()
-                        .map(contact -> {
-                            Set<Account> accounts = accountRepository.findByUserId(contact.getContactId());
-                            List<AccountResponseDTO> beneficiaryAccountsResponseDTO = accounts.stream()
-                                    .map(accountMapper::toAccountResponseDTO)
-                                    .toList();
+                    return new ReceiversAccountsResponseDTO(
+                        contact.getUsername(),
+                        beneficiaryAccounts
+                    );
 
-                            return new ReceiversAccountsResponseDTO(
-                                    contact.getUsername(),
-                                    beneficiaryAccountsResponseDTO
-                            );
-                        })
-                        .toList()
+                }).toList()
         );
 
-        return accountsDTO;
+        return allAccountsDTO;
     }
 }
