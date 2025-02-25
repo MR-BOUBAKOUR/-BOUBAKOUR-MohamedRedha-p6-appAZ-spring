@@ -73,8 +73,14 @@ public class AccountController {
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
+
+            List<AccountResponseDTO> accounts = user.getAccounts().stream()
+                    .sorted(Comparator.comparing(AccountResponseDTO::getCreatedAt).reversed())
+                    .toList();
+
             model.addAttribute("updateBalance", new BalanceUpdateDTO());
             model.addAttribute("createAccount", newAccount);
+            model.addAttribute("accounts", accounts);
             model.addAttribute("user", user);
             return "accounts";
         }
@@ -98,8 +104,14 @@ public class AccountController {
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
+
+            List<AccountResponseDTO> accounts = user.getAccounts().stream()
+                    .sorted(Comparator.comparing(AccountResponseDTO::getCreatedAt).reversed())
+                    .toList();
+
             model.addAttribute("createAccount", new AccountCreateDTO());
             model.addAttribute("updateBalance", addedBalance);
+            model.addAttribute("accounts", accounts);
             model.addAttribute("user", user);
             return "accounts";
         }

@@ -27,7 +27,7 @@ CREATE TABLE accounts (
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     name VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES users (id)
 ) AUTO_INCREMENT = 30000;
 
 DROP TABLE IF EXISTS transactions;

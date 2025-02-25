@@ -1,6 +1,8 @@
 package com.payMyBuddy.dto.transaction;
 
 import com.payMyBuddy.model.TransactionType;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.math.BigDecimal;
