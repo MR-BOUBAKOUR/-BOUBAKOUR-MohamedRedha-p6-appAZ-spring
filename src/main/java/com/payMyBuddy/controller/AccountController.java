@@ -1,6 +1,7 @@
 package com.payMyBuddy.controller;
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
+import com.payMyBuddy.dto.account.AccountResponseDTO;
 import com.payMyBuddy.dto.account.BalanceUpdateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.security.SecurityUtils;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Comparator;
+import java.util.List;
 
 @Controller
 public class AccountController {
@@ -38,20 +42,25 @@ public class AccountController {
         if (userId == null) {
             return "redirect:/login";
         }
-        UserResponseDTO userResponseDTO = userService.findUserById(userId);
-        if (userResponseDTO == null) {
+        UserResponseDTO user = userService.findUserById(userId);
+        if (user == null) {
             return "redirect:/login";
         }
 
+        List<AccountResponseDTO> accounts = user.getAccounts().stream()
+                .sorted(Comparator.comparing(AccountResponseDTO::getCreatedAt).reversed())
+                .toList();
+
         model.addAttribute("createAccount", new AccountCreateDTO());
         model.addAttribute("updateBalance", new BalanceUpdateDTO());
-        model.addAttribute("user", userResponseDTO);
+        model.addAttribute("user", user);
+        model.addAttribute("accounts", accounts);
         return "accounts";
     }
 
     @PostMapping("/createAccount")
     public String createAccount(
-        @Valid @ModelAttribute("createAccount") AccountCreateDTO accountCreateDTO,
+        @Valid @ModelAttribute("createAccount") AccountCreateDTO newAccount,
         BindingResult bindingResult,
         Model model
     ) {
@@ -59,24 +68,24 @@ public class AccountController {
         if (userId == null) {
             return "redirect:/login";
         }
-        UserResponseDTO userResponseDTO = userService.findUserById(userId);
-        if (userResponseDTO == null) {
+        UserResponseDTO user = userService.findUserById(userId);
+        if (user == null) {
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", userResponseDTO);
-            model.addAttribute("createAccount", accountCreateDTO);
             model.addAttribute("updateBalance", new BalanceUpdateDTO());
+            model.addAttribute("createAccount", newAccount);
+            model.addAttribute("user", user);
             return "accounts";
         }
 
-        accountService.createAccount(accountCreateDTO, userId);
+        accountService.createAccount(newAccount, userId);
         return "redirect:/accounts";
     }
 
     @PutMapping("/accounts/deposit")
     public String showDeposit(
-            @Valid @ModelAttribute("updateBalance") BalanceUpdateDTO balanceUpdateDTO,
+            @Valid @ModelAttribute("updateBalance") BalanceUpdateDTO addedBalance,
             BindingResult bindingResult,
             Model model
     ) {
@@ -84,18 +93,18 @@ public class AccountController {
         if (userId == null) {
             return "redirect:/login";
         }
-        UserResponseDTO userResponseDTO = userService.findUserById(userId);
-        if (userResponseDTO == null) {
+        UserResponseDTO user = userService.findUserById(userId);
+        if (user == null) {
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", userResponseDTO);
-            model.addAttribute("updateBalance", balanceUpdateDTO);
             model.addAttribute("createAccount", new AccountCreateDTO());
+            model.addAttribute("updateBalance", addedBalance);
+            model.addAttribute("user", user);
             return "accounts";
         }
 
-        accountService.updateBalanceAccount(balanceUpdateDTO);
+        accountService.updateBalanceAccount(addedBalance);
         return "redirect:/accounts";
     }
 

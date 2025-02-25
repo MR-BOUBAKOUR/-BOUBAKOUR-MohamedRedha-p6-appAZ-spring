@@ -43,19 +43,25 @@
                     <th>Récepteur</th>
                     <th>Montant</th>
                     <th>Description</th>
-                    <th>Type</th>
                     <th>Date</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="transaction : ${transactions}" class="text-center border-primary">
-                    <td th:text="${transaction.id}" class="align-middle border-primary"></td>
-                    <td th:text="${transaction.senderAccountId}" class="align-middle border-primary"></td>
-                    <td th:text="${transaction.receiverAccountId}" class="align-middle border-primary"></td>
-                    <td th:text="${transaction.amount}" class="align-middle border-primary"></td>
-                    <td th:text="${transaction.description}" class="align-middle border-primary"></td>
-                    <td th:text="${transaction.type}" class="align-middle border-primary"></td>
-                    <td th:text="${transaction.getFormattedCreatedAt()}" class="align-middle border-primary"></td>
+                <tr th:each="transaction : ${transactions}"
+                    th:class="${transaction.getRowStyleClass(user.id)}"
+                    class="text-center border-primary">
+                    <td class="border-primary" th:text="${transaction.id}"></td>
+                    <td class="border-primary">
+                        <strong th:text="${transaction.senderUsername}"></strong>
+                        <span th:text="' - ' + ${transaction.senderAccountName}"></span>
+                    </td>
+                    <td class="border-primary">
+                        <strong th:text="${transaction.receiverUsername}"></strong>
+                        <span th:text="' - ' + ${transaction.receiverAccountName}"></span>
+                    </td>
+                    <td th:text="${transaction.amount}" class="border-primary"></td>
+                    <td th:text="${transaction.description}" class="border-primary"></td>
+                    <td th:text="${transaction.getFormattedCreatedAt()}" class="border-primary"></td>
                 </tr>
                 </tbody>
             </table>

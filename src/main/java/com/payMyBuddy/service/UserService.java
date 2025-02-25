@@ -1,5 +1,6 @@
 package com.payMyBuddy.service;
 
+import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.user.ContactCreateDTO;
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
@@ -10,6 +11,7 @@ import com.payMyBuddy.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,11 +27,15 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+    private final AccountService accountService;
+
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, @Lazy AccountService accountService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = new BCryptPasswordEncoder();
+
+        this.accountService = accountService;
     }
 
     public UserResponseDTO findUserById(Integer userId) {
@@ -42,12 +48,16 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void createUser(UserCreateDTO userCreateDTO) {
-        User user = userMapper.toEntityFromCreateDTO(userCreateDTO);
-
+    public void createUser(UserCreateDTO newUser) {
+        User user = userMapper.toEntityFromCreateDTO(newUser);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
+
+        accountService.createAccount(
+                new AccountCreateDTO("Pay My Buddy"),
+                user.getId()
+        );
     }
 
     public void createContact(Integer userId, ContactCreateDTO contactCreateDTO) {

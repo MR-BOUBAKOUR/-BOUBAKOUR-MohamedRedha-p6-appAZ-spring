@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -34,24 +35,28 @@ public class TransactionController {
         if (userId == null) {
             return "redirect:/login";
         }
-        UserResponseDTO userResponseDTO = userService.findUserById(userId);
-        if (userResponseDTO == null) {
+        UserResponseDTO user = userService.findUserById(userId);
+        if (user == null) {
             return "redirect:/login";
         }
 
-        List<TransactionResponseDTO> transactions = transactionService.findTransactionsForCurrentUser(userId);
+        List<TransactionResponseDTO> transactions = transactionService
+            .findTransactionsForCurrentUser(userId).stream()
+            .sorted(Comparator.comparing(TransactionResponseDTO::getCreatedAt).reversed())
+            .toList();
+
         List<ReceiversAccountsResponseDTO> receiversAccounts = accountService.findAccountsForCurrentUserAndHisContacts(userId);
 
         model.addAttribute("transactionCreate", new TransactionCreateDTO());
-        model.addAttribute("transactions", transactions);
         model.addAttribute("receiversAccounts", receiversAccounts);
-        model.addAttribute("user", userResponseDTO);
+        model.addAttribute("transactions", transactions);
+        model.addAttribute("user", user);
         return "transactions";
     }
 
     @PostMapping("/createTransaction")
     public String createTransaction(
-            @Valid @ModelAttribute("transactionCreate") TransactionCreateDTO transactionCreateDTO,
+            @Valid @ModelAttribute("transactionCreate") TransactionCreateDTO transaction,
             BindingResult bindingResult,
             Model model
     ) {
@@ -59,22 +64,22 @@ public class TransactionController {
         if (userId == null) {
             return "redirect:/login";
         }
-        UserResponseDTO userResponseDTO = userService.findUserById(userId);
-        if (userResponseDTO == null) {
+        UserResponseDTO user = userService.findUserById(userId);
+        if (user == null) {
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
             List<TransactionResponseDTO> transactions = transactionService.findTransactionsForCurrentUser(userId);
             List<ReceiversAccountsResponseDTO> receiversAccounts = accountService.findAccountsForCurrentUserAndHisContacts(userId);
             
-            model.addAttribute("transactionCreate", transactionCreateDTO);
-            model.addAttribute("transactions", transactions);
+            model.addAttribute("transactionCreate", transaction);
             model.addAttribute("receiversAccounts", receiversAccounts);
-            model.addAttribute("user", userResponseDTO);
+            model.addAttribute("transactions", transactions);
+            model.addAttribute("user", user);
             return "transactions";
         }
 
-        transactionService.createTransaction(transactionCreateDTO);
+        transactionService.createTransaction(transaction);
         return "redirect:/transactions";
     }
 }

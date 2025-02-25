@@ -27,8 +27,8 @@ CREATE TABLE accounts (
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     name VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES users (id)
-);
+    CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) AUTO_INCREMENT = 30000;
 
 DROP TABLE IF EXISTS transactions;
 CREATE TABLE transactions (
@@ -39,8 +39,8 @@ CREATE TABLE transactions (
     description VARCHAR(255),
     type VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_sender_account FOREIGN KEY (sender_account_id) REFERENCES accounts(id),
-    CONSTRAINT fk_receiver_account FOREIGN KEY (receiver_account_id) REFERENCES accounts(id)
+    CONSTRAINT fk_sender_account FOREIGN KEY (sender_account_id) REFERENCES accounts(id) ON DELETE CASCADE,
+    CONSTRAINT fk_receiver_account FOREIGN KEY (receiver_account_id) REFERENCES accounts(id) ON DELETE CASCADE
 );
 
 INSERT INTO users (username, email, password)
@@ -53,12 +53,8 @@ VALUES
 
 INSERT INTO accounts (user_id, balance, name)
 VALUES
-    (1, 100.00, 'personal'),
-    (1, 500.00, 'business'),
-    (2, 50.00, 'personal'),
-    (3, 25.00, 'personal'),
-    (4, 10.00, 'personal');
-
-INSERT INTO transactions (sender_account_id, receiver_account_id, amount, description, type)
-VALUES
-    (1, 2, 50.00, 'Transfert de compte personnel à compte business', 'SELF_TRANSFER');
+    (1, 100.00, 'Pay My Buddy'),
+    (2, 500.00, 'Pay My Buddy'),
+    (3, 50.00, 'Pay My Buddy'),
+    (4, 25.00, 'Pay My Buddy'),
+    (5, 10.00, 'Pay My Buddy');

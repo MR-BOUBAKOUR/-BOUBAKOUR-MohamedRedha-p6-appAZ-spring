@@ -73,7 +73,39 @@
                 <div class="card mb-3">
                     <div class="card-header bg-primary text-white">Dernières transactions</div>
                     <div class="card-body">
-                        <p>Aucune transaction récente.</p>
+                        <div th:if="${recentTransactions != null and !recentTransactions.isEmpty()}">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <thead class="bg-light">
+                                    <tr class="text-center">
+                                        <th>De</th>
+                                        <th>Vers</th>
+                                        <th>Montant</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="transaction : ${recentTransactions}"
+                                        th:class="${transaction.getRowStyleClass(user.id)}"
+                                        class="text-center border-primary">
+                                        <td class="text-center">
+                                            <strong th:text="${transaction.senderUsername}"></strong><br>
+                                            <span th:text="${transaction.senderAccountName}"></span>
+                                        </td>
+                                        <td class="text-center">
+                                            <strong th:text="${transaction.receiverUsername}"></strong><br>
+                                            <span th:text="${transaction.receiverAccountName}"></span>
+                                        </td>
+                                        <td class="text-center" th:text="${transaction.amount}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div th:if="${recentTransactions == null or recentTransactions.isEmpty()}">
+                            <p>Aucune transaction récente.</p>
+                        </div>
+
                         <a href="/transactions" class="btn btn-outline-primary btn-sm">Voir toutes les transactions</a>
                     </div>
                 </div>

@@ -63,7 +63,7 @@
                 </thead>
 
                 <tbody>
-                    <tr th:each="account : ${user.accounts}" class="text-center border-primary">
+                    <tr th:each="account : ${accounts}" class="text-center border-primary">
                         <td th:text="${account.id}" class="align-middle border-primary"></td>
                         <td th:text="${account.getFormattedCreatedAt()}" class="align-middle border-primary"></td>
                         <td th:text="${account.name}" class="align-middle border-primary"></td>

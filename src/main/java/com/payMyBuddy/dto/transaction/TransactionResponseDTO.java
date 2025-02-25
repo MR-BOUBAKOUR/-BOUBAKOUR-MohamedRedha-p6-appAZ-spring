@@ -16,8 +16,17 @@ import java.time.format.DateTimeFormatter;
 public class TransactionResponseDTO {
 
     private Integer id;
+
     private Integer senderAccountId;
+    private String senderAccountName;
+    private Integer senderId;
+    private String senderUsername;
+
     private Integer receiverAccountId;
+    private String receiverAccountName;
+    private Integer receiverId;
+    private String receiverUsername;
+
     private BigDecimal amount;
     private String description;
     private TransactionType type;
@@ -29,6 +38,19 @@ public class TransactionResponseDTO {
         ZonedDateTime zdt = createdAt.atZone(zoneId);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return formatter.format(zdt);
+    }
+
+    public String getRowStyleClass(Integer currentUserId) {
+        if (this.type == TransactionType.SELF_TRANSFER) {
+            return "bg-light";
+        }
+
+        if (this.senderId.equals(currentUserId)) {
+            return "text-danger";
+        }
+
+        // Si l'utilisateur courant est le récepteur, vert
+        return "text-success";
     }
 
 }
