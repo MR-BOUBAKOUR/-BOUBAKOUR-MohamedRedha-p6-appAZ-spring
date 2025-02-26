@@ -6,8 +6,6 @@ import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.UserService;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ContactController {
-
-    private static final Logger logger = LoggerFactory.getLogger(ContactController.class);
 
     private final UserService userService;
     private final SecurityUtils securityUtils;

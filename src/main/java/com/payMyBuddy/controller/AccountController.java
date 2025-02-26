@@ -9,8 +9,6 @@ import com.payMyBuddy.service.AccountService;
 import com.payMyBuddy.service.UserService;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,8 +20,6 @@ import java.util.List;
 
 @Controller
 public class AccountController {
-
-    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private final UserService userService;
     private final AccountService accountService;

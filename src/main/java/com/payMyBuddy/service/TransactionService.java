@@ -11,8 +11,6 @@ import com.payMyBuddy.model.TransactionType;
 import com.payMyBuddy.repository.TransactionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,8 +21,6 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class TransactionService {
-
-    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;

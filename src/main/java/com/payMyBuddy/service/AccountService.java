@@ -14,8 +14,6 @@ import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.AccountRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,8 +26,6 @@ import java.util.Set;
 @Transactional
 @RequiredArgsConstructor
 public class AccountService {
-
-    private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
