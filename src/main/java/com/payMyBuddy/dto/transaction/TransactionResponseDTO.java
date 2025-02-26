@@ -44,15 +44,15 @@ public class TransactionResponseDTO {
 
     public String getRowStyleClass(Integer currentUserId) {
         if (this.type == TransactionType.SELF_TRANSFER) {
-            return "bg-light";
+            return "bg-light text-center border-primary";
         }
 
         if (this.senderId.equals(currentUserId)) {
-            return "text-danger";
+            return "text-danger text-center border-primary";
         }
 
         // Si l'utilisateur courant est le récepteur, vert
-        return "text-success";
+        return "text-success text-center border-primary";
     }
 
 }

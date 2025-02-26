@@ -35,10 +35,10 @@ public class Account {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    @OneToMany(mappedBy = "senderAccount", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Transaction> sentTransactions;
 
-    @OneToMany(mappedBy = "receiverAccount", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "receiverAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Transaction> receivedTransactions;
 
 }

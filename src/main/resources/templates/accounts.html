@@ -70,7 +70,7 @@
                         <td th:text="${account.balance}" class="align-middle border-primary"></td>
                         <td class="text-center align-middle border-primary" style="width: 8%">
                             <form th:action="@{/accounts/{id}(id=${account.id})}" method="post"
-                                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce compte ?');">
+                                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce compte ? Toutes les transactions associées à celui-ci seront supprimées.');">
                                 <input type="hidden" name="_method" value="delete" />
                                 <button type="submit" class="btn btn-danger btn-sm">X</button>
                             </form>

@@ -48,8 +48,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="transaction : ${transactions}"
-                    th:class="${transaction.getRowStyleClass(user.id)}"
-                    class="text-center border-primary">
+                    th:class="${transaction.getRowStyleClass(user.id)}">
                     <td class="border-primary" th:text="${transaction.id}"></td>
                     <td class="border-primary">
                         <strong th:text="${transaction.senderUsername}"></strong>
