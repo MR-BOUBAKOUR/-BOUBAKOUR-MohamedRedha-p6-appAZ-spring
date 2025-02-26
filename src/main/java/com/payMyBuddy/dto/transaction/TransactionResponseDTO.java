@@ -1,8 +1,6 @@
 package com.payMyBuddy.dto.transaction;
 
 import com.payMyBuddy.model.TransactionType;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -48,11 +46,10 @@ public class TransactionResponseDTO {
         }
 
         if (this.senderId.equals(currentUserId)) {
-            return "text-danger text-center border-primary";
+            return "bg-danger-transparent text-danger text-center border-primary";
         }
 
-        // Si l'utilisateur courant est le récepteur, vert
-        return "text-success text-center border-primary";
+        return "bg-success-transparent text-success text-center border-primary";
     }
 
 }

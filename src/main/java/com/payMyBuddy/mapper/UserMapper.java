@@ -8,8 +8,6 @@ import com.payMyBuddy.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.Optional;
-
 @Mapper(componentModel = "spring", uses = {AccountMapper.class})
 public interface UserMapper {
 

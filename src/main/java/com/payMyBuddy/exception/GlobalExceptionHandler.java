@@ -39,6 +39,13 @@ public class GlobalExceptionHandler {
         return "redirect:/accounts";
     }
 
+    @ExceptionHandler(EmailAlreadyExistException.class)
+    public String handleEmailAlreadyExistException(EmailAlreadyExistException ex, RedirectAttributes redirectAttributes) {
+        logger.error(ex.getMessage());
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return "redirect:/signup";
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public String handleResourceNotFoundException(ResourceNotFoundException ex, RedirectAttributes redirectAttributes) {
         logger.error(ex.getMessage());

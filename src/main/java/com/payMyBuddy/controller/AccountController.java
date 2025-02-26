@@ -47,14 +47,7 @@ public class AccountController {
             return "redirect:/login";
         }
 
-        List<AccountResponseDTO> accounts = user.getAccounts().stream()
-                .sorted(Comparator.comparing(AccountResponseDTO::getCreatedAt).reversed())
-                .toList();
-
-        model.addAttribute("createAccount", new AccountCreateDTO());
-        model.addAttribute("updateBalance", new BalanceUpdateDTO());
-        model.addAttribute("user", user);
-        model.addAttribute("accounts", accounts);
+        prepareAccountsAndModels(model, user, new AccountCreateDTO(), new BalanceUpdateDTO());
         return "accounts";
     }
 
@@ -73,15 +66,7 @@ public class AccountController {
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
-
-            List<AccountResponseDTO> accounts = user.getAccounts().stream()
-                    .sorted(Comparator.comparing(AccountResponseDTO::getCreatedAt).reversed())
-                    .toList();
-
-            model.addAttribute("updateBalance", new BalanceUpdateDTO());
-            model.addAttribute("createAccount", newAccount);
-            model.addAttribute("accounts", accounts);
-            model.addAttribute("user", user);
+            prepareAccountsAndModels(model, user, newAccount, new BalanceUpdateDTO());
             return "accounts";
         }
 
@@ -104,15 +89,7 @@ public class AccountController {
             return "redirect:/login";
         }
         if (bindingResult.hasErrors()) {
-
-            List<AccountResponseDTO> accounts = user.getAccounts().stream()
-                    .sorted(Comparator.comparing(AccountResponseDTO::getCreatedAt).reversed())
-                    .toList();
-
-            model.addAttribute("createAccount", new AccountCreateDTO());
-            model.addAttribute("updateBalance", addedBalance);
-            model.addAttribute("accounts", accounts);
-            model.addAttribute("user", user);
+            prepareAccountsAndModels(model, user, new AccountCreateDTO(), addedBalance);
             return "accounts";
         }
 
@@ -129,5 +106,22 @@ public class AccountController {
 
         accountService.deleteAccount(accountId);
         return "redirect:/accounts";
+    }
+
+    private void prepareAccountsAndModels(
+            Model model,
+            UserResponseDTO user,
+            AccountCreateDTO createAccount,
+            BalanceUpdateDTO updateBalance
+    ) {
+
+        List<AccountResponseDTO> accounts = user.getAccounts().stream()
+                .sorted(Comparator.comparing(AccountResponseDTO::getCreatedAt).reversed())
+                .toList();
+
+        model.addAttribute("createAccount", createAccount);
+        model.addAttribute("updateBalance", updateBalance);
+        model.addAttribute("accounts", accounts);
+        model.addAttribute("user", user);
     }
 }

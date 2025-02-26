@@ -21,6 +21,7 @@
                 <div class="form-group">
                     <input type="text" id="email" th:field="${user.email}" class="form-control" placeholder="Mail" />
                     <small class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                    <small th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></small>
                 </div>
 
                 <div class="form-group">

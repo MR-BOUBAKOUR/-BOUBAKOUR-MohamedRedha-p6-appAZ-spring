@@ -2,6 +2,7 @@ package com.payMyBuddy.controller;
 
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserLoginDTO;
+import com.payMyBuddy.exception.EmailAlreadyExistException;
 import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.UserService;
 
@@ -48,27 +49,28 @@ public class AuthController {
 
     @PostMapping("/processSignup")
     public String processSignup(
+            Model model,
             @Valid @ModelAttribute("user") UserCreateDTO userCreateDTO,
             BindingResult bindingResult
     ) {
         if (securityUtils.getCurrentUserId() != null) {
             return "redirect:/dashboard";
         }
-
         if (bindingResult.hasErrors()) {
+            model.addAttribute("user", userCreateDTO);
             return "signup-form";
         }
 
-        if (userService.existsByEmail(userCreateDTO.getEmail())) {
+        try {
+            userService.createUser(userCreateDTO);
+        } catch (EmailAlreadyExistException e) {
             bindingResult.rejectValue(
-                    "email",
-                    "error.user",
-                    "Adresse email déjà utilisée. Veuillez en choisir une autre."
+                    "email", "error.user", e.getMessage()
             );
+            model.addAttribute("user", userCreateDTO);
             return "signup-form";
         }
 
-        userService.createUser(userCreateDTO);
         return "redirect:/login?success=true";
     }
 }

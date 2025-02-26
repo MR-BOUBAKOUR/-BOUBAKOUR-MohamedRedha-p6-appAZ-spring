@@ -37,23 +37,20 @@ public class AccountService {
     private final UserService userService;
     private final AccountMapper accountMapper;
 
-    public AccountResponseDTO findAccountById(Integer accountId) {
+    public Account findAccountByIdInternalUse(Integer accountId) {
         return accountRepository.findById(accountId)
-                .map(accountMapper::toAccountResponseDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
     }
 
     public void createAccount(AccountCreateDTO accountCreateDTO, Integer userId) {
-        User user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé."));
+
+        User user = userService.findUserByIdInternalUse(userId);
 
         if (accountRepository.existsByNameAndUser_Id(accountCreateDTO.getName(), userId)) {
             throw new ConflictException("Vous avez déjà un compte avec ce nom. Veuillez en choisir un autre.");
         }
 
         Account account = accountMapper.toEntityFromCreateDTO(accountCreateDTO);
-
         account.setUser(user);
         account.setBalance(BigDecimal.ZERO);
         account.setCreatedAt(Instant.now());
@@ -62,17 +59,15 @@ public class AccountService {
     }
 
     public void deleteAccount(Integer accountId) {
-        Account account = accountRepository
-                .findById(accountId)
-                .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
+
+        Account account = findAccountByIdInternalUse(accountId);
 
         accountRepository.delete(account);
     }
 
     public void updateBalanceAccount(BalanceUpdateDTO balanceUpdateDTO) {
-        Account account = accountRepository
-                .findById(balanceUpdateDTO.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
+
+        Account account = findAccountByIdInternalUse(balanceUpdateDTO.getAccountId());
 
         account.setBalance(
                 account.getBalance()

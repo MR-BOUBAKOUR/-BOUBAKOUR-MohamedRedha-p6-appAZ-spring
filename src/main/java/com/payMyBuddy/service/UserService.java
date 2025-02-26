@@ -4,6 +4,7 @@ import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.user.ContactCreateDTO;
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
+import com.payMyBuddy.exception.EmailAlreadyExistException;
 import com.payMyBuddy.exception.ResourceNotFoundException;
 import com.payMyBuddy.mapper.UserMapper;
 import com.payMyBuddy.model.User;
@@ -16,8 +17,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -40,10 +39,20 @@ public class UserService {
         this.accountService = accountService;
     }
 
+    public User findUserByIdInternalUse(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+    }
+
     public UserResponseDTO findUserById(Integer userId) {
         return userRepository.findById(userId)
-            .map(userMapper::toUserResponseDTO)
-            .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+                .map(userMapper::toUserResponseDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+    }
+
+    public User findUserByEmailInternalUse(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
     public boolean existsByEmail(String email) {
@@ -51,6 +60,11 @@ public class UserService {
     }
 
     public void createUser(UserCreateDTO newUser) {
+
+        if (existsByEmail(newUser.getEmail())) {
+            throw new EmailAlreadyExistException("Adresse email déjà utilisée. Veuillez en choisir une autre.");
+        }
+
         User user = userMapper.toEntityFromCreateDTO(newUser);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -63,10 +77,9 @@ public class UserService {
     }
 
     public void createContact(Integer userId, ContactCreateDTO contactCreateDTO) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
-        User contact = userRepository.findByEmail(contactCreateDTO.getEmail())
-            .orElseThrow(() -> new ResourceNotFoundException("Bénéficiaire non trouvé."));
+
+        User user = findUserByIdInternalUse(userId);
+        User contact = findUserByEmailInternalUse(contactCreateDTO.getEmail());
 
         // bidirectional relation
         user.addContact(contact);
@@ -76,10 +89,9 @@ public class UserService {
     }
 
     public void deleteContact(Integer userId, Integer contactId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
-        User contact = userRepository.findById(contactId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bénéficiaire non trouvé."));
+
+        User user = findUserByIdInternalUse(userId);
+        User contact = findUserByIdInternalUse(contactId);
 
         // bidirectional relation
         user.removeContact(contact);
