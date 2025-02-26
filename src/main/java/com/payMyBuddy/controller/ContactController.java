@@ -31,15 +31,7 @@ public class ContactController {
     @GetMapping("/contacts")
     public String showContacts(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
         UserResponseDTO userResponseDTO = userService.findUserById(userId);
-        if (userResponseDTO == null) {
-            return "redirect:/login";
-        }
-
-        logger.warn("User found: {}", userResponseDTO);
 
         model.addAttribute("createContact", new ContactCreateDTO());
         model.addAttribute("user", userResponseDTO);
@@ -53,13 +45,8 @@ public class ContactController {
             Model model
     ) {
         Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
         UserResponseDTO userResponseDTO = userService.findUserById(userId);
-        if (userResponseDTO == null) {
-            return "redirect:/login";
-        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("createContact", contactCreateDTO);
             model.addAttribute("user", userResponseDTO);
@@ -73,9 +60,6 @@ public class ContactController {
     @DeleteMapping("/contacts/{contactId}")
     public String deleteAccount(@PathVariable Integer contactId) {
         Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
 
         userService.deleteContact(userId, contactId);
         return "redirect:/contacts";

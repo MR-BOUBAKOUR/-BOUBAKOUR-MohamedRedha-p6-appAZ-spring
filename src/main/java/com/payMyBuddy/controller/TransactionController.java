@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -32,19 +31,9 @@ public class TransactionController {
     @GetMapping("/transactions")
     public String showTransactions(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
+
         UserResponseDTO user = userService.findUserById(userId);
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        List<TransactionResponseDTO> transactions = transactionService
-            .findTransactionsForCurrentUser(userId).stream()
-            .sorted(Comparator.comparing(TransactionResponseDTO::getCreatedAt).reversed())
-            .toList();
-
+        List<TransactionResponseDTO> transactions = transactionService.findTransactionsForCurrentUser(userId, 0);
         List<ReceiversAccountsResponseDTO> receiversAccounts = accountService.findAccountsForCurrentUserAndHisContacts(userId);
 
         model.addAttribute("transactionCreate", new TransactionCreateDTO());
@@ -56,20 +45,16 @@ public class TransactionController {
 
     @PostMapping("/createTransaction")
     public String createTransaction(
-            @Valid @ModelAttribute("transactionCreate") TransactionCreateDTO transaction,
-            BindingResult bindingResult,
-            Model model
+        @Valid @ModelAttribute("transactionCreate") TransactionCreateDTO transaction,
+        BindingResult bindingResult,
+        Model model
     ) {
-        Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
-        UserResponseDTO user = userService.findUserById(userId);
-        if (user == null) {
-            return "redirect:/login";
-        }
+
         if (bindingResult.hasErrors()) {
-            List<TransactionResponseDTO> transactions = transactionService.findTransactionsForCurrentUser(userId);
+            Integer userId = securityUtils.getCurrentUserId();
+
+            UserResponseDTO user = userService.findUserById(userId);
+            List<TransactionResponseDTO> transactions = transactionService.findTransactionsForCurrentUser(userId, 0);
             List<ReceiversAccountsResponseDTO> receiversAccounts = accountService.findAccountsForCurrentUserAndHisContacts(userId);
             
             model.addAttribute("transactionCreate", transaction);

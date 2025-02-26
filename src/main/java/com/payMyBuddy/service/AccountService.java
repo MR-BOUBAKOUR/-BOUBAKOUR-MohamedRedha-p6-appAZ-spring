@@ -12,7 +12,6 @@ import com.payMyBuddy.mapper.AccountMapper;
 import com.payMyBuddy.model.Account;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.AccountRepository;
-import com.payMyBuddy.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -33,13 +32,13 @@ public class AccountService {
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
-    private final UserService userService;
     private final AccountMapper accountMapper;
+
+    private final UserService userService;
 
     public Account findAccountByIdInternalUse(Integer accountId) {
         return accountRepository.findById(accountId)
-                .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
+            .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
     }
 
     public void createAccount(AccountCreateDTO accountCreateDTO, Integer userId) {
@@ -61,17 +60,15 @@ public class AccountService {
     public void deleteAccount(Integer accountId) {
 
         Account account = findAccountByIdInternalUse(accountId);
-
         accountRepository.delete(account);
     }
 
     public void updateBalanceAccount(BalanceUpdateDTO balanceUpdateDTO) {
 
         Account account = findAccountByIdInternalUse(balanceUpdateDTO.getAccountId());
-
         account.setBalance(
-                account.getBalance()
-                        .add(balanceUpdateDTO.getAmount())
+            account.getBalance()
+                .add(balanceUpdateDTO.getAmount())
         );
 
         accountRepository.save(account);
@@ -94,6 +91,7 @@ public class AccountService {
         ));
 
         Set<ContactResponseDTO> contacts = currentUser.getContacts();
+
         allAccountsDTO.addAll(
             contacts.stream()
                 .map(contact -> {
@@ -112,5 +110,9 @@ public class AccountService {
         );
 
         return allAccountsDTO;
+    }
+
+    public void saveAccount(Account account) {
+        accountRepository.save(account);
     }
 }

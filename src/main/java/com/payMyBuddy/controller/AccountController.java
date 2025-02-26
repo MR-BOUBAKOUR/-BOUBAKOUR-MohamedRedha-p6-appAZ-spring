@@ -39,13 +39,7 @@ public class AccountController {
     @GetMapping("/accounts")
     public String showAccounts(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
         UserResponseDTO user = userService.findUserById(userId);
-        if (user == null) {
-            return "redirect:/login";
-        }
 
         prepareAccountsAndModels(model, user, new AccountCreateDTO(), new BalanceUpdateDTO());
         return "accounts";
@@ -58,13 +52,8 @@ public class AccountController {
         Model model
     ) {
         Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
         UserResponseDTO user = userService.findUserById(userId);
-        if (user == null) {
-            return "redirect:/login";
-        }
+
         if (bindingResult.hasErrors()) {
             prepareAccountsAndModels(model, user, newAccount, new BalanceUpdateDTO());
             return "accounts";
@@ -81,13 +70,8 @@ public class AccountController {
             Model model
     ) {
         Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
         UserResponseDTO user = userService.findUserById(userId);
-        if (user == null) {
-            return "redirect:/login";
-        }
+
         if (bindingResult.hasErrors()) {
             prepareAccountsAndModels(model, user, new AccountCreateDTO(), addedBalance);
             return "accounts";
@@ -99,11 +83,6 @@ public class AccountController {
 
     @DeleteMapping("/accounts/{accountId}")
     public String deleteAccount(@PathVariable Integer accountId) {
-        Integer userId = securityUtils.getCurrentUserId();
-        if (userId == null) {
-            return "redirect:/login";
-        }
-
         accountService.deleteAccount(accountId);
         return "redirect:/accounts";
     }

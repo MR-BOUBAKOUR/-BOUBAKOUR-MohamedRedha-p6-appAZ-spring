@@ -41,18 +41,18 @@ public class UserService {
 
     public User findUserByIdInternalUse(Integer userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+            .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
     public UserResponseDTO findUserById(Integer userId) {
         return userRepository.findById(userId)
-                .map(userMapper::toUserResponseDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+            .map(userMapper::toUserResponseDTO)
+            .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
     public User findUserByEmailInternalUse(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+            .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
     public boolean existsByEmail(String email) {
@@ -71,8 +71,8 @@ public class UserService {
         userRepository.save(user);
 
         accountService.createAccount(
-                new AccountCreateDTO("Pay My Buddy"),
-                user.getId()
+            new AccountCreateDTO("Pay My Buddy"),
+            user.getId()
         );
     }
 

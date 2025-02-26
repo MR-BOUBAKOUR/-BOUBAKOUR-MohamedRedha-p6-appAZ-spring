@@ -3,13 +3,11 @@ package com.payMyBuddy.service;
 import com.payMyBuddy.dto.transaction.TransactionCreateDTO;
 import com.payMyBuddy.dto.transaction.TransactionResponseDTO;
 import com.payMyBuddy.exception.InsufficientBalanceException;
-import com.payMyBuddy.exception.ResourceNotFoundException;
 import com.payMyBuddy.exception.SelfSendingAmountException;
 import com.payMyBuddy.mapper.TransactionMapper;
 import com.payMyBuddy.model.Account;
 import com.payMyBuddy.model.Transaction;
 import com.payMyBuddy.model.TransactionType;
-import com.payMyBuddy.repository.AccountRepository;
 import com.payMyBuddy.repository.TransactionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -28,24 +27,32 @@ public class TransactionService {
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     private final TransactionRepository transactionRepository;
-    private final AccountRepository accountRepository;
     private final TransactionMapper transactionMapper;
 
-    public List<TransactionResponseDTO> findTransactionsForCurrentUser(Integer currentUserId) {
+    private final AccountService accountService;
 
-        return transactionRepository
-                .findBySenderAccount_User_IdOrReceiverAccount_User_Id(currentUserId, currentUserId)
+    public List<TransactionResponseDTO> findTransactionsForCurrentUser(Integer currentUserId, int limit) {
+
+        List<TransactionResponseDTO> transactions = transactionRepository
+            .findBySenderAccount_User_IdOrReceiverAccount_User_Id(currentUserId, currentUserId)
+            .stream()
+            .map(transactionMapper::toResponseDTO)
+            .sorted(Comparator.comparing(TransactionResponseDTO::getCreatedAt).reversed())
+            .toList();
+
+        if (limit > 0) {
+            return transactions
                 .stream()
-                .map(transactionMapper::toResponseDTO)
+                .limit(limit)
                 .toList();
-
+        }
+        return transactions;
     }
 
     public void createTransaction(TransactionCreateDTO transactionCreateDTO) {
-        Account senderAccount = accountRepository.findById(transactionCreateDTO.getSenderAccountId())
-            .orElseThrow(() -> new ResourceNotFoundException("Compte émetteur non trouvé"));
-        Account receiverAccount = accountRepository.findById(transactionCreateDTO.getReceiverAccountId())
-            .orElseThrow(() -> new ResourceNotFoundException("Compte récepteur non trouvé"));
+
+        Account senderAccount = accountService.findAccountByIdInternalUse(transactionCreateDTO.getSenderAccountId());
+        Account receiverAccount = accountService.findAccountByIdInternalUse(transactionCreateDTO.getReceiverAccountId());
 
         Transaction transaction = transactionMapper.toEntityFromCreateDTO(transactionCreateDTO);
 
@@ -80,7 +87,7 @@ public class TransactionService {
                     transaction.getAmount()
             ));
 
-        accountRepository.save(receiverAccount);
-        accountRepository.save(senderAccount);
+        accountService.saveAccount(senderAccount);
+        accountService.saveAccount(receiverAccount);
     }
 }
