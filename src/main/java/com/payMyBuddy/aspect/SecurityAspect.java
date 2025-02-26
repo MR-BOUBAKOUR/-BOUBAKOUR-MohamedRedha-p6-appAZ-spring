@@ -24,7 +24,7 @@ public class SecurityAspect {
         this.securityUtils = securityUtils;
     }
 
-    // Pointcut qui intercepte toutes les méthodes des contrôleurs dans les packages appropriés
+    // Pointcuts qui interceptent toutes les méthodes des contrôleurs
     @Pointcut("execution(* com.payMyBuddy.controller.AccountController.*(..))")
     public void accountControllerMethods() {}
 
@@ -37,8 +37,11 @@ public class SecurityAspect {
     @Pointcut("execution(* com.payMyBuddy.controller.TransactionController.*(..))")
     public void transactionControllerMethods() {}
 
+    @Pointcut("accountControllerMethods() || contactControllerMethods() || dashboardControllerMethods() || transactionControllerMethods()")
+    public void securedControllers() {}
+
     // Avant l'exécution des méthodes, vérifier si l'utilisateur est authentifié
-    @Before("accountControllerMethods() || contactControllerMethods() || dashboardControllerMethods() || transactionControllerMethods()")
+    @Before("securedControllers()")
     public void checkAuthentication() {
         Integer userId = securityUtils.getCurrentUserId();
         if (userId == null) {
