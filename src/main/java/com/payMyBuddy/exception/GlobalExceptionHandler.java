@@ -31,8 +31,8 @@ public class GlobalExceptionHandler {
         return "redirect:/transactions";
     }
 
-    @ExceptionHandler(SelfAddContactException.class)
-    public String handleSelfAddContactException(SelfAddContactException ex, RedirectAttributes redirectAttributes) {
+    @ExceptionHandler(AddContactException.class)
+    public String handleAddContactException(AddContactException ex, RedirectAttributes redirectAttributes) {
         logger.error(ex.getMessage());
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         return "redirect:/contacts";

@@ -1,6 +1,6 @@
 package com.payMyBuddy.model;
 
-import com.payMyBuddy.exception.SelfAddContactException;
+import com.payMyBuddy.exception.AddContactException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,9 +44,12 @@ public class User {
 
     public void addContact(User contact) {
         if (this.equals(contact)) {
-            throw new SelfAddContactException("Un utilisateur ne peut pas s'ajouter lui-même.");
+            throw new AddContactException("Un utilisateur ne peut pas s'ajouter lui-même.");
         }
-        if (!contacts.contains(contact)) {
+
+        if (contacts.contains(contact)) {
+            throw new AddContactException("Ce contact est déjà dans votre liste.");
+        } else {
             contacts.add(contact);
             contact.getContacts().add(this);
         }
