@@ -13,7 +13,6 @@ import java.util.Set;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Account {
 
     @Id
@@ -39,5 +38,18 @@ public class Account {
 
     @OneToMany(mappedBy = "receiverAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Transaction> receivedTransactions;
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", user=" + (user != null ? user.getId() : "NULL") +
+                ", balance=" + balance +
+                ", name='" + name + '\'' +
+                ", createdAt=" + createdAt +
+                ", sentTransactions=" + (sentTransactions != null ? sentTransactions.size() : "NULL") +
+                ", receivedTransactions=" + (receivedTransactions != null ? receivedTransactions.size() : "NULL") +
+                '}';
+    }
 
 }

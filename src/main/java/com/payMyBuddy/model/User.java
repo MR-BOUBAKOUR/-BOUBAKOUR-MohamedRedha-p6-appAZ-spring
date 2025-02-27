@@ -11,7 +11,6 @@ import java.util.Set;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class User {
 
     @Id
@@ -58,6 +57,17 @@ public class User {
             contacts.remove(contact);
             contact.getContacts().remove(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", accounts=" + (accounts != null ? accounts.size() : "NULL") +
+                ", contacts=" + (contacts != null ? contacts.size() : "NULL") +
+                '}';
     }
 
 }

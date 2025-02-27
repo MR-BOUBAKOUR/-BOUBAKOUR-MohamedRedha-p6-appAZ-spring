@@ -12,7 +12,6 @@ import java.time.Instant;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Transaction {
 
     @Id
@@ -41,4 +40,16 @@ public class Transaction {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", senderAccount=" + (senderAccount != null ? senderAccount.getId() : "NULL") +
+                ", receiverAccount=" + (receiverAccount != null ? receiverAccount.getId() : "NULL") +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }
