@@ -14,23 +14,23 @@
 
             <form th:action="@{/processSignup}" th:object="${user}" method="post">
                 <div class="form-group">
-                    <input type="text" id="username" th:field="${user.username}" class="form-control" placeholder="Username" />
+                    <input type="text" id="username" th:field="${user.username}" class="form-control" placeholder="Username" required />
                     <small class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
                 </div>
 
                 <div class="form-group">
-                    <input type="text" id="email" th:field="${user.email}" class="form-control" placeholder="Mail" />
+                    <input type="text" id="email" th:field="${user.email}" class="form-control" placeholder="Mail" required />
                     <small class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
                     <small th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></small>
                 </div>
 
                 <div class="form-group">
-                    <input type="password" id="password" th:field="${user.password}" class="form-control" placeholder="Mot de passe" />
+                    <input type="password" id="password" th:field="${user.password}" class="form-control" placeholder="Mot de passe" required />
                     <small class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
                 </div>
 
                 <div class="form-group">
-                    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" placeholder="Confirmez le mot de passe" />
+                    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" placeholder="Confirmez le mot de passe" required />
                     <small class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></small>
                 </div>
 

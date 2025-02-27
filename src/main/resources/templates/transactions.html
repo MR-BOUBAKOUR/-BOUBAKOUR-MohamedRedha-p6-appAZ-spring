@@ -29,7 +29,7 @@
                 <li class="nav-item active"><a class="nav-link" href="/transactions">Virements</a></li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item mr-3 d-flex align-items-center"><span class="text-primary" th:text="${user.email}"></span></li>
+                <li class="nav-item mr-3 d-flex align-items-center"><a href="/profile" class="text-primary" th:text="${user.email}"></a></li>
                 <li class="nav-item">
                     <form th:action="@{/logout}" method="post">
                         <button type="submit" class="btn btn-outline-primary">Se déconnecter</button>

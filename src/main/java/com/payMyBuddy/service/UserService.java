@@ -3,8 +3,10 @@ package com.payMyBuddy.service;
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.user.ContactCreateDTO;
 import com.payMyBuddy.dto.user.UserCreateDTO;
+import com.payMyBuddy.dto.user.UserPasswordUpdateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.exception.EmailAlreadyExistException;
+import com.payMyBuddy.exception.IncorrectPasswordException;
 import com.payMyBuddy.exception.ResourceNotFoundException;
 import com.payMyBuddy.mapper.UserMapper;
 import com.payMyBuddy.model.User;
@@ -94,5 +96,20 @@ public class UserService {
 
         userRepository.save(user);
         userRepository.save(contact);
+    }
+
+    public void updatePasswordByUserId(UserPasswordUpdateDTO userPasswordUpdateDTO, Integer userId) {
+
+        User user = findUserByIdInternalUse(userId);
+        if (!passwordEncoder.matches(
+            userPasswordUpdateDTO.getActualPassword(),
+            user.getPassword()
+        )) {
+            throw new IncorrectPasswordException("Le mot de passe actuel est incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(userPasswordUpdateDTO.getNewPassword()));
+
+        userRepository.save(user);
     }
 }

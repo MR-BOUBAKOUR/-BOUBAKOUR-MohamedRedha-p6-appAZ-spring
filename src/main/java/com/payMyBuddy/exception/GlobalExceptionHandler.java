@@ -52,6 +52,13 @@ public class GlobalExceptionHandler {
         return "redirect:/signup";
     }
 
+    @ExceptionHandler(IncorrectPasswordException.class)
+    public String handleIncorrectPasswordException(IncorrectPasswordException ex, RedirectAttributes redirectAttributes) {
+        logger.error(ex.getMessage());
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return "redirect:/profile";
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public String handleResourceNotFoundException(ResourceNotFoundException ex, RedirectAttributes redirectAttributes) {
         logger.error(ex.getMessage());
