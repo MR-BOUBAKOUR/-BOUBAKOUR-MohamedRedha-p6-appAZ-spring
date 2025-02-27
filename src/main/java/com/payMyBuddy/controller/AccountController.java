@@ -60,7 +60,7 @@ public class AccountController {
     }
 
     @PutMapping("/accounts/deposit")
-    public String showDeposit(
+    public String createDeposit(
             @Valid @ModelAttribute("updateBalance") BalanceUpdateDTO addedBalance,
             BindingResult bindingResult,
             Model model
