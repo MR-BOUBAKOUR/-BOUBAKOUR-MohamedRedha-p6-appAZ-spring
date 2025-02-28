@@ -12,16 +12,16 @@
         <div class="card p-4 border border-primary" style="width: 100%; max-width: 400px;">
             <a class="btn btn-warning mb-3" href="/login">Pay My Buddy</a>
 
-            <div th:if="${param.error}" class="alert alert-danger" role="alert">
-                Email ou mot de passe invalide.
+            <div th:if="${successMessage}" class="alert alert-success mb-3" role="alert">
+                <span th:text="${successMessage}"></span>
             </div>
 
-            <div th:if="${param.logout}" class="alert alert-success" role="alert">
+            <div th:if="${param.logout}" class="alert alert-success mb-3" role="alert">
                 Deconnecté avec succès.
             </div>
 
-            <div th:if="${param.success}" class="alert alert-success" role="alert">
-                Inscription réussie ! Vous pouvez vous connecter.
+            <div th:if="${param.error}" class="alert alert-danger mb-3" role="alert">
+                Email ou mot de passe invalide.
             </div>
 
             <form th:action="@{/processLogin}" th:object="${user}" method="post">

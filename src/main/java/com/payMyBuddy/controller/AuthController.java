@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AuthController {
@@ -51,7 +52,8 @@ public class AuthController {
     public String processSignup(
             Model model,
             @Valid @ModelAttribute("user") UserCreateDTO userCreateDTO,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes
     ) {
         if (securityUtils.getCurrentUserId() != null) {
             return "redirect:/dashboard";
@@ -71,6 +73,7 @@ public class AuthController {
             return "signup-form";
         }
 
-        return "redirect:/login?success=true";
+        redirectAttributes.addFlashAttribute("successMessage", "Inscription réussie ! Vous pouvez vous connecter.");
+        return "redirect:/login";
     }
 }

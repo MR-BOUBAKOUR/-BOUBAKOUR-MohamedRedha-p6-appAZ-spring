@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ContactController {
@@ -38,7 +39,8 @@ public class ContactController {
     public String createContact(
             @Valid @ModelAttribute("createContact") ContactCreateDTO contactCreateDTO,
             BindingResult bindingResult,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         Integer userId = securityUtils.getCurrentUserId();
         UserResponseDTO userResponseDTO = userService.findUserById(userId);
@@ -50,14 +52,19 @@ public class ContactController {
         }
 
         userService.createContact(userId, contactCreateDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "Contact ajouté avec succès !");
         return "redirect:/contacts";
     }
 
     @DeleteMapping("/contacts/{contactId}")
-    public String deleteAccount(@PathVariable Integer contactId) {
+    public String deleteAccount(
+            @PathVariable Integer contactId,
+            RedirectAttributes redirectAttributes
+    ) {
         Integer userId = securityUtils.getCurrentUserId();
 
         userService.deleteContact(userId, contactId);
+        redirectAttributes.addFlashAttribute("successMessage", "Contact supprimé avec succès !");
         return "redirect:/contacts";
     }
 }

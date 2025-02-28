@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -44,7 +45,8 @@ public class ProfileController {
     public String profileUpdate(
             @Valid @ModelAttribute("passwordUpdate") UserPasswordUpdateDTO userPasswordUpdateDTO,
             BindingResult bindingResult,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         Integer userId = securityUtils.getCurrentUserId();
 
@@ -57,6 +59,7 @@ public class ProfileController {
         }
 
         userService.updatePasswordByUserId(userPasswordUpdateDTO, userId);
-        return "redirect:/profile?success=true";
+        redirectAttributes.addFlashAttribute("successMessage", "Votre mot de passe a été modifié avec succès !");
+        return "redirect:/profile";
     }
 }

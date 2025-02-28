@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Comparator;
 import java.util.List;
@@ -45,7 +46,8 @@ public class AccountController {
     public String createAccount(
         @Valid @ModelAttribute("createAccount") AccountCreateDTO newAccount,
         BindingResult bindingResult,
-        Model model
+        Model model,
+        RedirectAttributes redirectAttributes
     ) {
         Integer userId = securityUtils.getCurrentUserId();
         UserResponseDTO user = userService.findUserById(userId);
@@ -56,6 +58,7 @@ public class AccountController {
         }
 
         accountService.createAccount(newAccount, userId);
+        redirectAttributes.addFlashAttribute("successMessage", "Compte créé avec succès !");
         return "redirect:/accounts";
     }
 
@@ -63,7 +66,8 @@ public class AccountController {
     public String createDeposit(
             @Valid @ModelAttribute("updateBalance") BalanceUpdateDTO addedBalance,
             BindingResult bindingResult,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         Integer userId = securityUtils.getCurrentUserId();
         UserResponseDTO user = userService.findUserById(userId);
@@ -74,12 +78,17 @@ public class AccountController {
         }
 
         accountService.updateBalanceAccount(addedBalance);
+        redirectAttributes.addFlashAttribute("successMessage", "Dépôt effectué avec succès !");
         return "redirect:/accounts";
     }
 
     @DeleteMapping("/accounts/{accountId}")
-    public String deleteAccount(@PathVariable Integer accountId) {
+    public String deleteAccount(
+        @PathVariable Integer accountId,
+        RedirectAttributes redirectAttributes
+    ) {
         accountService.deleteAccount(accountId);
+        redirectAttributes.addFlashAttribute("successMessage", "Compte supprimé avec succès !");
         return "redirect:/accounts";
     }
 

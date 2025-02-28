@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -53,7 +54,8 @@ public class TransactionController {
     public String createTransaction(
         @Valid @ModelAttribute("transactionCreate") TransactionCreateDTO transaction,
         BindingResult bindingResult,
-        Model model
+        Model model,
+        RedirectAttributes redirectAttributes
     ) {
 
         if (bindingResult.hasErrors()) {
@@ -71,6 +73,7 @@ public class TransactionController {
         }
 
         transactionService.createTransaction(transaction);
+        redirectAttributes.addFlashAttribute("successMessage", "Transaction effectuée avec succès !");
         return "redirect:/transactions";
     }
 }
