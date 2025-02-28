@@ -193,7 +193,7 @@ class AuthControllerTest {
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/login?success=true"));
+            .andExpect(redirectedUrl("/login"));
 
         // Verify
         ArgumentCaptor<UserCreateDTO> userCaptor = ArgumentCaptor.forClass(UserCreateDTO.class);

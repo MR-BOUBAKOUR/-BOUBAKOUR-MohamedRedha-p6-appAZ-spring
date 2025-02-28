@@ -32,9 +32,6 @@ class ContactControllerTest {
     private TransactionService transactionService;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private WebApplicationContext context;
     @Autowired
     private MockMvc mockMvc;
