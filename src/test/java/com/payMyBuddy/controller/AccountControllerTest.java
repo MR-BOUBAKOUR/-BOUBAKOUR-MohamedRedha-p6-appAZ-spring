@@ -1,6 +1,5 @@
 package com.payMyBuddy.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.account.BalanceUpdateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
@@ -8,7 +7,6 @@ import com.payMyBuddy.security.CustomUserDetailsService;
 import com.payMyBuddy.security.SecurityConfig;
 import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.AccountService;
-import com.payMyBuddy.service.TransactionService;
 import com.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,10 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -76,9 +72,9 @@ class AccountControllerTest {
 
         // When & Then
         mockMvc.perform(get("/accounts"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("accounts"))
-                .andExpect(model().attributeExists("accounts", "user"));
+            .andExpect(status().isOk())
+            .andExpect(view().name("accounts"))
+            .andExpect(model().attributeExists("accounts", "user"));
     }
 
     @Test
@@ -110,13 +106,13 @@ class AccountControllerTest {
 
         // When & Then
         mockMvc.perform(post("/createAccount")
-                        .param("name", "")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isOk())
-                .andExpect(view().name("accounts"))
-                .andExpect(model().attributeExists("accounts", "user", "createAccount", "updateBalance"))
-                .andExpect(model().attributeHasFieldErrors("createAccount", "name"));
+                .param("name", "")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+            .andExpect(status().isOk())
+            .andExpect(view().name("accounts"))
+            .andExpect(model().attributeExists("accounts", "user", "createAccount", "updateBalance"))
+            .andExpect(model().attributeHasFieldErrors("createAccount", "name"));
     }
 
     @Test
@@ -153,16 +149,15 @@ class AccountControllerTest {
 
         // When & Then
         mockMvc.perform(put("/accounts/deposit")
-                        .param("amount", "-100")
-                        .param("accountId", "1")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().isOk())
-                .andExpect(view().name("accounts"))
-                .andExpect(model().attributeExists("accounts", "user", "createAccount", "updateBalance"))
-                .andExpect(model().attributeHasFieldErrors("updateBalance", "amount"));
+                .param("amount", "-100")
+                .param("accountId", "1")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+            .andExpect(status().isOk())
+            .andExpect(view().name("accounts"))
+            .andExpect(model().attributeExists("accounts", "user", "createAccount", "updateBalance"))
+            .andExpect(model().attributeHasFieldErrors("updateBalance", "amount"));
     }
-
 
     @Test
     void deleteAccount_shouldDeleteAccountAndRedirect() throws Exception {

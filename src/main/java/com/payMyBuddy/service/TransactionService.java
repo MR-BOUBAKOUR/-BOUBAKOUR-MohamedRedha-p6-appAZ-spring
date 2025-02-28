@@ -53,7 +53,7 @@ public class TransactionService {
         Transaction transaction = transactionMapper.toEntityFromCreateDTO(transactionCreateDTO);
 
         if (senderAccount.getId().equals(receiverAccount.getId())) {
-            throw new SelfSendingAmountException("Virement interdit sur le même compte .");
+            throw new SelfSendingAmountException("Virement interdit sur le même compte.");
         }
         if (senderAccount.getBalance().compareTo(transaction.getAmount()) < 0) {
             throw new InsufficientBalanceException("Solde insuffisant. Veuillez alimenter votre compte.");
