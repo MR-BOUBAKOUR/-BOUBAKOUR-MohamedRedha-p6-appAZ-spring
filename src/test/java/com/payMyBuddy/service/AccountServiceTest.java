@@ -19,27 +19,4 @@ class AccountServiceTest {
     @InjectMocks
     private AccountService accountService;
 
-    @Test
-    void findAccountByIdInternalUse_test() {
-    }
-
-    @Test
-    void createAccount_test() {
-    }
-
-    @Test
-    void deleteAccount_test() {
-    }
-
-    @Test
-    void updateBalanceAccount_test() {
-    }
-
-    @Test
-    void findAccountsForCurrentUserAndHisContacts_test() {
-    }
-
-    @Test
-    void saveAccount_test() {
-    }
 }

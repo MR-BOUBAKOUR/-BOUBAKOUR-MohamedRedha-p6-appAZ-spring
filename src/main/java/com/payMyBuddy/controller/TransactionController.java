@@ -20,13 +20,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
 public class TransactionController {
 
     private final UserService userService;
     private final TransactionService transactionService;
     private final AccountService accountService;
     private final SecurityUtils securityUtils;
+
+    public TransactionController(UserService userService, TransactionService transactionService, AccountService accountService, SecurityUtils securityUtils) {
+        this.userService = userService;
+        this.transactionService = transactionService;
+        this.accountService = accountService;
+        this.securityUtils = securityUtils;
+    }
 
     @GetMapping("/transactions")
     public String showTransactions(Model model) {

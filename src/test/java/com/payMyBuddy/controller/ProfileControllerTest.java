@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,11 +20,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@WebMvcTest(controllers = AccountController.class)
+@WebMvcTest(controllers = ProfileController.class)
 @Import(SecurityConfig.class)
-@WithMockUser
-class AccountControllerTest {
-
+class ProfileControllerTest {
+    
     @MockitoBean
     private AccountService accountService;
     @MockitoBean
@@ -48,11 +46,9 @@ class AccountControllerTest {
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders
-            .webAppContextSetup(context)
-            .apply(SecurityMockMvcConfigurers.springSecurity())
-            .build();
+                .webAppContextSetup(context)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
     }
-
-
 
 }

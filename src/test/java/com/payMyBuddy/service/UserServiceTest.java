@@ -19,31 +19,4 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @Test
-    void findUserByIdInternalUse_test() {
-    }
-
-    @Test
-    void findUserById_test() {
-    }
-
-    @Test
-    void findUserByEmailInternalUse_test() {
-    }
-
-    @Test
-    void existsByEmail_test() {
-    }
-
-    @Test
-    void createUser_test() {
-    }
-
-    @Test
-    void createContact_test() {
-    }
-
-    @Test
-    void deleteContact_test() {
-    }
 }

@@ -19,11 +19,4 @@ class TransactionServiceTest {
     @InjectMocks
     private TransactionService transactionService;
 
-    @Test
-    void findTransactionsForCurrentUser_test() {
-    }
-
-    @Test
-    void createTransaction_test() {
-    }
 }

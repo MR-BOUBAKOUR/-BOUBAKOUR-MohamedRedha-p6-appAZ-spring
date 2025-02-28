@@ -84,10 +84,10 @@ public class AccountController {
     }
 
     private void prepareAccountsAndModels(
-            Model model,
-            UserResponseDTO user,
-            AccountCreateDTO createAccount,
-            BalanceUpdateDTO updateBalance
+        Model model,
+        UserResponseDTO user,
+        AccountCreateDTO createAccount,
+        BalanceUpdateDTO updateBalance
     ) {
 
         List<AccountResponseDTO> accounts = user.getAccounts().stream()
