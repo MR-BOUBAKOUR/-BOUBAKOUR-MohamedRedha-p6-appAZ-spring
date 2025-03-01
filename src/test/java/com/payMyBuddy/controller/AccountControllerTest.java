@@ -2,6 +2,7 @@ package com.payMyBuddy.controller;
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.account.BalanceUpdateDTO;
+import com.payMyBuddy.dto.user.ContactCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.security.CustomUserDetailsService;
 import com.payMyBuddy.security.SecurityConfig;
@@ -25,8 +26,8 @@ import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -92,6 +93,8 @@ class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/accounts"));
+
+        verify(accountService, times(1)).createAccount(any(AccountCreateDTO.class), eq(userId));
     }
 
     @Test
@@ -113,6 +116,8 @@ class AccountControllerTest {
             .andExpect(view().name("accounts"))
             .andExpect(model().attributeExists("accounts", "user", "createAccount", "updateBalance"))
             .andExpect(model().attributeHasFieldErrors("createAccount", "name"));
+
+        verify(accountService, never()).createAccount(any(), any());
     }
 
     @Test
@@ -135,10 +140,13 @@ class AccountControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/accounts"));
+
+        verify(accountService, times(1)).updateBalanceAccount(any(BalanceUpdateDTO.class));
     }
 
     @Test
     void createDeposit_whenValidationErrors_shouldReturnToAccountsPage() throws Exception {
+
         // Given
         Integer userId = 1;
         UserResponseDTO user = new UserResponseDTO();
@@ -157,6 +165,8 @@ class AccountControllerTest {
             .andExpect(view().name("accounts"))
             .andExpect(model().attributeExists("accounts", "user", "createAccount", "updateBalance"))
             .andExpect(model().attributeHasFieldErrors("updateBalance", "amount"));
+
+        verify(accountService, never()).updateBalanceAccount(any());
     }
 
     @Test
@@ -170,6 +180,8 @@ class AccountControllerTest {
                 .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/accounts"));
+
+        verify(accountService, times(1)).deleteAccount(any());
     }
 
 }
