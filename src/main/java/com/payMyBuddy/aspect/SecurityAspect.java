@@ -37,12 +37,16 @@ public class SecurityAspect {
     @Pointcut("execution(* com.payMyBuddy.controller.TransactionController.*(..))")
     public void transactionControllerMethods() {}
 
-    @Pointcut("accountControllerMethods() || contactControllerMethods() || dashboardControllerMethods() || transactionControllerMethods()")
+    @Pointcut("execution(* com.payMyBuddy.controller.ProfileController.*(..))")
+    public void ProfileControllerMethods() {}
+
+    @Pointcut("accountControllerMethods() || contactControllerMethods() || dashboardControllerMethods() || transactionControllerMethods() || ProfileControllerMethods()")
     public void securedControllers() {}
 
     // Avant l'exécution des méthodes, vérifier si l'utilisateur est authentifié
     @Before("securedControllers()")
     public void checkAuthentication() {
+        logger.info("Checking authentication");
         Integer userId = securityUtils.getCurrentUserId();
         if (userId == null) {
             throw new UnauthorizedException("Utilisateur non authentifié");

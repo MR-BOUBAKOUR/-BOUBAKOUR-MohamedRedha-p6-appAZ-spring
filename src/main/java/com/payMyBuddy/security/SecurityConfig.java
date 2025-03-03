@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -28,7 +29,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(configurer ->
                 configurer
-                    .requestMatchers("/login", "/signup", "/processSignup").permitAll()
+                    .requestMatchers("/login", "/signup", "/processSignup", "/error").permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin(form ->
@@ -46,8 +47,7 @@ public class SecurityConfig {
                 .permitAll()
             )
             .exceptionHandling(configurer ->
-                configurer
-                    .accessDeniedPage("/access-denied")
+                    configurer.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
             )
             .securityMatcher("/**");
 

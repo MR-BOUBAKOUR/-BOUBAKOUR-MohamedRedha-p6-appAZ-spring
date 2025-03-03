@@ -49,10 +49,9 @@ public class ProfileController {
             RedirectAttributes redirectAttributes
     ) {
         Integer userId = securityUtils.getCurrentUserId();
+        UserResponseDTO user = userService.findUserById(userId);
 
         if (bindingResult.hasErrors()) {
-            UserResponseDTO user = userService.findUserById(userId);
-
             model.addAttribute("passwordUpdate", userPasswordUpdateDTO);
             model.addAttribute("user", user);
             return "profile";
