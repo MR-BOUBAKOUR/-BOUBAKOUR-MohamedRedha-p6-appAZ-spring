@@ -37,12 +37,12 @@ public class UserService {
         this.accountService = accountService;
     }
 
-    public User findUserByIdInternalUse(Integer userId) {
+    public User findByUserIdInternalUse(Integer userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
-    public UserResponseDTO findUserById(Integer userId) {
+    public UserResponseDTO findByUserId(Integer userId) {
         return userRepository.findById(userId)
             .map(userMapper::toUserResponseDTO)
             .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
@@ -76,7 +76,7 @@ public class UserService {
 
     public void createContact(Integer userId, ContactCreateDTO contactCreateDTO) {
 
-        User user = findUserByIdInternalUse(userId);
+        User user = findByUserIdInternalUse(userId);
         User contact = findUserByEmailInternalUse(contactCreateDTO.getEmail());
 
         // bidirectional relation
@@ -88,8 +88,8 @@ public class UserService {
 
     public void deleteContact(Integer userId, Integer contactId) {
 
-        User user = findUserByIdInternalUse(userId);
-        User contact = findUserByIdInternalUse(contactId);
+        User user = findByUserIdInternalUse(userId);
+        User contact = findByUserIdInternalUse(contactId);
 
         // bidirectional relation
         user.removeContact(contact);
@@ -100,7 +100,7 @@ public class UserService {
 
     public void updatePasswordByUserId(UserPasswordUpdateDTO userPasswordUpdateDTO, Integer userId) {
 
-        User user = findUserByIdInternalUse(userId);
+        User user = findByUserIdInternalUse(userId);
         if (!passwordEncoder.matches(
             userPasswordUpdateDTO.getActualPassword(),
             user.getPassword()

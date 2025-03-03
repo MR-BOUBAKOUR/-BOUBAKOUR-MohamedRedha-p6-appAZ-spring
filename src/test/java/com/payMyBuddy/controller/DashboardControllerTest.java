@@ -71,7 +71,7 @@ class DashboardControllerTest {
 
         // When
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // Then
         mockMvc
@@ -89,7 +89,7 @@ class DashboardControllerTest {
 
         // When
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenThrow(new ResourceNotFoundException("Utilisateur non trouvé."));
+        when(userService.findByUserId(userId)).thenThrow(new ResourceNotFoundException("Utilisateur non trouvé."));
 
         // Then
         mockMvc

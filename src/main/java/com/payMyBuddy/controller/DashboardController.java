@@ -31,7 +31,7 @@ public class DashboardController {
     public String showDashboard(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
 
-        UserResponseDTO user = userService.findUserById(userId);
+        UserResponseDTO user = userService.findByUserId(userId);
         List<TransactionResponseDTO> recentTransactions = transactionService.findTransactionsForCurrentUser(userId, 5);
 
         model.addAttribute("user", user);

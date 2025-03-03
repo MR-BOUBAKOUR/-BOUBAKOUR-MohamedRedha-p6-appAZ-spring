@@ -72,7 +72,7 @@ class ContactControllerTest {
 
         // When
         when(securityUtils.getCurrentUserId()).thenReturn(UserId);
-        when(userService.findUserById(UserId)).thenReturn(user);
+        when(userService.findByUserId(UserId)).thenReturn(user);
 
         // Then
         mockMvc
@@ -92,7 +92,7 @@ class ContactControllerTest {
 
         // When
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
         doNothing().when(userService).createContact(eq(userId), any(ContactCreateDTO.class));
 
         // Then
@@ -117,7 +117,7 @@ class ContactControllerTest {
 
         // When
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // Then
         mockMvc
@@ -143,7 +143,7 @@ class ContactControllerTest {
 
         // When
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
         doThrow(new AddContactException("Ce contact est déjà dans votre liste."))
                 .when(userService).createContact(eq(userId), any(ContactCreateDTO.class));
 

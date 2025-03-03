@@ -39,7 +39,7 @@ public class AccountService {
 
     public void createAccount(AccountCreateDTO accountCreateDTO, Integer userId) {
 
-        User user = userService.findUserByIdInternalUse(userId);
+        User user = userService.findByUserIdInternalUse(userId);
 
         if (accountRepository.existsByNameAndUser_Id(accountCreateDTO.getName(), userId)) {
             throw new ConflictException("Vous avez déjà un compte avec ce nom. Veuillez en choisir un autre.");
@@ -74,7 +74,7 @@ public class AccountService {
 
         List<ReceiversAccountsResponseDTO> allAccountsDTO = new ArrayList<>();
 
-        UserResponseDTO currentUser = userService.findUserById(userId);
+        UserResponseDTO currentUser = userService.findByUserId(userId);
         List<AccountResponseDTO> selfAccounts =
             accountRepository.findByUserId(userId).stream()
                 .map(accountMapper::toAccountResponseDTO)

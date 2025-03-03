@@ -28,7 +28,7 @@ public class ContactController {
     @GetMapping("/contacts")
     public String showContacts(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
-        UserResponseDTO userResponseDTO = userService.findUserById(userId);
+        UserResponseDTO userResponseDTO = userService.findByUserId(userId);
 
         model.addAttribute("createContact", new ContactCreateDTO());
         model.addAttribute("user", userResponseDTO);
@@ -43,7 +43,7 @@ public class ContactController {
             RedirectAttributes redirectAttributes
     ) {
         Integer userId = securityUtils.getCurrentUserId();
-        UserResponseDTO userResponseDTO = userService.findUserById(userId);
+        UserResponseDTO userResponseDTO = userService.findByUserId(userId);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("createContact", contactCreateDTO);

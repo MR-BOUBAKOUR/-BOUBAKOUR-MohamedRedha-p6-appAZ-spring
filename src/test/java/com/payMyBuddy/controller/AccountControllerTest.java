@@ -69,7 +69,7 @@ class AccountControllerTest {
         UserResponseDTO user = new UserResponseDTO();
         user.setAccounts(Set.of());
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // When & Then
         mockMvc.perform(get("/accounts"))
@@ -105,7 +105,7 @@ class AccountControllerTest {
         user.setAccounts(Set.of());
 
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // When & Then
         mockMvc.perform(post("/createAccount")
@@ -128,7 +128,7 @@ class AccountControllerTest {
         user.setAccounts(Set.of());
 
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // When & Then
         doNothing().when(accountService).updateBalanceAccount(any(BalanceUpdateDTO.class));
@@ -153,7 +153,7 @@ class AccountControllerTest {
         user.setAccounts(Set.of());
 
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // When & Then
         mockMvc.perform(put("/accounts/deposit")

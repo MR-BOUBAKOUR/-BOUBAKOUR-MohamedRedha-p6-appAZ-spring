@@ -34,7 +34,7 @@ public class ProfileController {
     @GetMapping("/profile")
     public String showProfile(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
-        UserResponseDTO user = userService.findUserById(userId);
+        UserResponseDTO user = userService.findByUserId(userId);
 
         model.addAttribute("passwordUpdate", new UserPasswordUpdateDTO());
         model.addAttribute("user", user);
@@ -49,7 +49,7 @@ public class ProfileController {
             RedirectAttributes redirectAttributes
     ) {
         Integer userId = securityUtils.getCurrentUserId();
-        UserResponseDTO user = userService.findUserById(userId);
+        UserResponseDTO user = userService.findByUserId(userId);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("passwordUpdate", userPasswordUpdateDTO);

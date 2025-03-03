@@ -46,7 +46,6 @@ public class SecurityAspect {
     // Avant l'exécution des méthodes, vérifier si l'utilisateur est authentifié
     @Before("securedControllers()")
     public void checkAuthentication() {
-        logger.info("Checking authentication");
         Integer userId = securityUtils.getCurrentUserId();
         if (userId == null) {
             throw new UnauthorizedException("Utilisateur non authentifié");

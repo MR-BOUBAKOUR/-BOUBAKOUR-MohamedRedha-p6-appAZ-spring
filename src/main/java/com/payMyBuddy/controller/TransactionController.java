@@ -39,7 +39,7 @@ public class TransactionController {
     public String showTransactions(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
 
-        UserResponseDTO user = userService.findUserById(userId);
+        UserResponseDTO user = userService.findByUserId(userId);
         List<TransactionResponseDTO> transactions = transactionService.findTransactionsForCurrentUser(userId, 0);
         List<ReceiversAccountsResponseDTO> receiversAccounts = accountService.findAccountsForCurrentUserAndHisContacts(userId);
 
@@ -61,7 +61,7 @@ public class TransactionController {
         if (bindingResult.hasErrors()) {
             Integer userId = securityUtils.getCurrentUserId();
 
-            UserResponseDTO user = userService.findUserById(userId);
+            UserResponseDTO user = userService.findByUserId(userId);
             List<TransactionResponseDTO> transactions = transactionService.findTransactionsForCurrentUser(userId, 0);
             List<ReceiversAccountsResponseDTO> receiversAccounts = accountService.findAccountsForCurrentUserAndHisContacts(userId);
             

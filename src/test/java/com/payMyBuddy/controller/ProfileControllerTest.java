@@ -70,7 +70,7 @@ class ProfileControllerTest {
         Integer userId = 1;
         UserResponseDTO user = new UserResponseDTO();
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // When & Then
         mockMvc.perform(get("/profile"))
@@ -89,7 +89,7 @@ class ProfileControllerTest {
         user.setEmail("test@gmail.com");
 
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // When & Then
         doNothing().when(userService).updatePasswordByUserId(any(UserPasswordUpdateDTO.class), eq(userId));
@@ -114,7 +114,7 @@ class ProfileControllerTest {
         UserResponseDTO user = new UserResponseDTO();
 
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // When & Then
         mockMvc.perform(post("/profileUpdate")

@@ -72,7 +72,7 @@ class TransactionControllerTest {
 
         // When
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // Then
         mockMvc
@@ -93,7 +93,7 @@ class TransactionControllerTest {
 
         // When
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
         doNothing().when(transactionService).createTransaction(transactionCreateDTO);
 
         // Then
@@ -122,7 +122,7 @@ class TransactionControllerTest {
 
         // When
         when(securityUtils.getCurrentUserId()).thenReturn(userId);
-        when(userService.findUserById(userId)).thenReturn(user);
+        when(userService.findByUserId(userId)).thenReturn(user);
 
         // Then
         mockMvc

@@ -36,7 +36,7 @@ public class AccountController {
     @GetMapping("/accounts")
     public String showAccounts(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
-        UserResponseDTO user = userService.findUserById(userId);
+        UserResponseDTO user = userService.findByUserId(userId);
 
         prepareAccountsAndModels(model, user, new AccountCreateDTO(), new BalanceUpdateDTO());
         return "accounts";
@@ -50,7 +50,7 @@ public class AccountController {
         RedirectAttributes redirectAttributes
     ) {
         Integer userId = securityUtils.getCurrentUserId();
-        UserResponseDTO user = userService.findUserById(userId);
+        UserResponseDTO user = userService.findByUserId(userId);
 
         if (bindingResult.hasErrors()) {
             prepareAccountsAndModels(model, user, newAccount, new BalanceUpdateDTO());
@@ -70,7 +70,7 @@ public class AccountController {
             RedirectAttributes redirectAttributes
     ) {
         Integer userId = securityUtils.getCurrentUserId();
-        UserResponseDTO user = userService.findUserById(userId);
+        UserResponseDTO user = userService.findByUserId(userId);
 
         if (bindingResult.hasErrors()) {
             prepareAccountsAndModels(model, user, new AccountCreateDTO(), addedBalance);
