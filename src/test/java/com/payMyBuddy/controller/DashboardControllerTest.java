@@ -95,7 +95,7 @@ class DashboardControllerTest {
         mockMvc
                 .perform(get("/dashboard"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/error"));
+                .andExpect(redirectedUrl("/contacts"));
     }
 
 }
