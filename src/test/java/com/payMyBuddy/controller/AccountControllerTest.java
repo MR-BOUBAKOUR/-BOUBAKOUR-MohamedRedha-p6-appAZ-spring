@@ -10,6 +10,7 @@ import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.AccountService;
 import com.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -63,6 +64,7 @@ class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("Affichage de la page des comptes")
     void showAccounts_shouldDisplayAccountsPage() throws Exception {
         // Given
         Integer userId = 1;
@@ -79,6 +81,7 @@ class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("Création d'un compte")
     void createAccount_whenValidData_shouldCreateAccountAndRedirect() throws Exception {
         // Given
         Integer userId = 1;
@@ -98,6 +101,7 @@ class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("Tentative de création de compte avec des erreurs de validation")
     void createAccount_whenValidationErrors_shouldReturnToAccountsPage() throws Exception {
         // Given
         Integer userId = 1;
@@ -121,6 +125,7 @@ class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("Dépôt sur un compte")
     void createDeposit_whenValidData_shouldUpdateBalanceAndRedirect() throws Exception {
         // Given
         Integer userId = 1;
@@ -145,6 +150,7 @@ class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("Tentative de dépôt avec des erreurs de validation")
     void createDeposit_whenValidationErrors_shouldReturnToAccountsPage() throws Exception {
 
         // Given
@@ -170,6 +176,7 @@ class AccountControllerTest {
     }
 
     @Test
+    @DisplayName("Suppression d'un compte")
     void deleteAccount_shouldDeleteAccountAndRedirect() throws Exception {
         // Given
         Integer accountId = 1;

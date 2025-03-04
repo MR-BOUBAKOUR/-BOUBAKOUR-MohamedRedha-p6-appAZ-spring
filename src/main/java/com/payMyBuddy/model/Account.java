@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -34,10 +35,10 @@ public class Account {
     private Instant createdAt;
 
     @OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Transaction> sentTransactions;
+    private Set<Transaction> sentTransactions = new HashSet<>();
 
     @OneToMany(mappedBy = "receiverAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Transaction> receivedTransactions;
+    private Set<Transaction> receivedTransactions = new HashSet<>();
 
     @Override
     public String toString() {

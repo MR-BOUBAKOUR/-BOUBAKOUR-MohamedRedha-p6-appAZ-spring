@@ -4,6 +4,7 @@ import com.payMyBuddy.exception.AddContactException;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -32,7 +33,7 @@ public class User {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
-    private Set<Account> accounts;
+    private Set<Account> accounts = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -40,18 +41,18 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "contact_id")
     )
-    private Set<User> contacts;
+    private Set<User> contacts = new HashSet<>();
 
     public void addContact(User contact) {
         if (this.equals(contact)) {
             throw new AddContactException("Un utilisateur ne peut pas s'ajouter lui-même.");
         }
 
-        if (contacts.contains(contact)) {
-            throw new AddContactException("Ce contact est déjà dans votre liste.");
-        } else {
+        if (!contacts.contains(contact)) {
             contacts.add(contact);
             contact.getContacts().add(this);
+        } else {
+            throw new AddContactException("Ce contact est déjà dans votre liste.");
         }
     }
 
