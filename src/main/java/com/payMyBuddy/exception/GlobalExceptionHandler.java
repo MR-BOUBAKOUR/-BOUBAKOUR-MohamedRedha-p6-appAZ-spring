@@ -64,10 +64,7 @@ public class GlobalExceptionHandler {
         logger.error(ex.getMessage());
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
 
-        if (ex.getMessage().equals("Bénéficiaire non trouvé.")) {
-            return "redirect:/contacts";
-        }
-        return "redirect:/error";
+        return "redirect:/contacts";
     }
 
     @ExceptionHandler(Exception.class)

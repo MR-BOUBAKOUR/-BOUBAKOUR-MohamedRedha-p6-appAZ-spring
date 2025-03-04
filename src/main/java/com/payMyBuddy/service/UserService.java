@@ -48,7 +48,7 @@ public class UserService {
             .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
-    public User findUserByEmailInternalUse(String email) {
+    public User findByUserEmailInternalUse(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
@@ -77,7 +77,7 @@ public class UserService {
     public void createContact(Integer userId, ContactCreateDTO contactCreateDTO) {
 
         User user = findByUserIdInternalUse(userId);
-        User contact = findUserByEmailInternalUse(contactCreateDTO.getEmail());
+        User contact = findByUserEmailInternalUse(contactCreateDTO.getEmail());
 
         // bidirectional relation
         user.addContact(contact);
