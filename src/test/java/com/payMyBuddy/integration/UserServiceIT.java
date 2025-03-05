@@ -10,7 +10,6 @@ import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.service.AccountService;
 import com.payMyBuddy.service.UserService;
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,7 @@ public class UserServiceIT {
     @BeforeEach
     void setUp() {
         user = new UserCreateDTO();
-        user.setEmail("test@example.com");
+        user.setEmail("user@example.com");
         user.setUsername("user");
         user.setPassword("123123");
         user.setConfirmPassword("123123");
