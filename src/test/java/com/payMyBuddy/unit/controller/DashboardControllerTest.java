@@ -1,6 +1,7 @@
-package com.payMyBuddy.controller;
+package com.payMyBuddy.unit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.payMyBuddy.controller.DashboardController;
 import com.payMyBuddy.dto.transaction.TransactionResponseDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.exception.ResourceNotFoundException;

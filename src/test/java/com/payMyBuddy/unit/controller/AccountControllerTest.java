@@ -1,5 +1,6 @@
-package com.payMyBuddy.controller;
+package com.payMyBuddy.unit.controller;
 
+import com.payMyBuddy.controller.AccountController;
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.account.BalanceUpdateDTO;
 import com.payMyBuddy.dto.user.ContactCreateDTO;

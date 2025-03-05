@@ -1,5 +1,6 @@
-package com.payMyBuddy.controller;
+package com.payMyBuddy.unit.controller;
 
+import com.payMyBuddy.controller.AuthController;
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.exception.EmailAlreadyExistException;
 import com.payMyBuddy.security.CustomUserDetailsService;

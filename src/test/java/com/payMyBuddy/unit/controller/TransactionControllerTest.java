@@ -1,5 +1,6 @@
-package com.payMyBuddy.controller;
+package com.payMyBuddy.unit.controller;
 
+import com.payMyBuddy.controller.TransactionController;
 import com.payMyBuddy.dto.transaction.TransactionCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.exception.InsufficientBalanceException;

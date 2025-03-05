@@ -1,4 +1,4 @@
-package com.payMyBuddy.service;
+package com.payMyBuddy.unit.service;
 
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.user.ContactCreateDTO;
@@ -10,6 +10,8 @@ import com.payMyBuddy.exception.IncorrectPasswordException;
 import com.payMyBuddy.mapper.UserMapper;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.UserRepository;
+import com.payMyBuddy.service.AccountService;
+import com.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

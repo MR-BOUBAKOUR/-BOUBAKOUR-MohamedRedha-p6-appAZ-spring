@@ -64,6 +64,10 @@ public class GlobalExceptionHandler {
         logger.error(ex.getMessage());
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
 
+        if (ex.getMessage() != null && ex.getMessage().contains("Compte non trouvé.")) {
+            return "redirect:/accounts";
+        }
+
         return "redirect:/contacts";
     }
 

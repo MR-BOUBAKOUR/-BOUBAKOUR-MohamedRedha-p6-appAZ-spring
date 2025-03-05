@@ -1,4 +1,4 @@
 package com.payMyBuddy.integration;
 
-public class TransactionServiceIT {
+public class TransactionIT {
 }

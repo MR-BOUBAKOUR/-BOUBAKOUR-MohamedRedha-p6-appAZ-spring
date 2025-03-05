@@ -1,5 +1,6 @@
-package com.payMyBuddy.controller;
+package com.payMyBuddy.unit.controller;
 
+import com.payMyBuddy.controller.ContactController;
 import com.payMyBuddy.dto.user.ContactCreateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
 import com.payMyBuddy.exception.AddContactException;

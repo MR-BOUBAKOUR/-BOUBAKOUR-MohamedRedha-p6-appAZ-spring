@@ -1,4 +1,4 @@
-package com.payMyBuddy.service;
+package com.payMyBuddy.unit.service;
 
 import com.payMyBuddy.dto.transaction.TransactionCreateDTO;
 import com.payMyBuddy.dto.transaction.TransactionResponseDTO;
@@ -9,6 +9,8 @@ import com.payMyBuddy.model.Account;
 import com.payMyBuddy.model.Transaction;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.TransactionRepository;
+import com.payMyBuddy.service.AccountService;
+import com.payMyBuddy.service.TransactionService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

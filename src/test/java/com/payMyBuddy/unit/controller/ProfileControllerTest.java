@@ -1,6 +1,7 @@
-package com.payMyBuddy.controller;
+package com.payMyBuddy.unit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.payMyBuddy.controller.ProfileController;
 import com.payMyBuddy.dto.account.AccountCreateDTO;
 import com.payMyBuddy.dto.user.UserPasswordUpdateDTO;
 import com.payMyBuddy.dto.user.UserResponseDTO;
