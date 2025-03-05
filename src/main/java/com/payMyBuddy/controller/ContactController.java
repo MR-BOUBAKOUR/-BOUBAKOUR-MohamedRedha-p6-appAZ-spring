@@ -57,7 +57,7 @@ public class ContactController {
     }
 
     @DeleteMapping("/contacts/{contactId}")
-    public String deleteAccount(
+    public String deleteContact(
             @PathVariable Integer contactId,
             RedirectAttributes redirectAttributes
     ) {

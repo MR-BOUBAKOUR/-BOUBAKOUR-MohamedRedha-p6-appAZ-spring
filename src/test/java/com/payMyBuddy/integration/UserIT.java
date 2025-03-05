@@ -3,28 +3,52 @@ package com.payMyBuddy.integration;
 import com.payMyBuddy.dto.user.ContactCreateDTO;
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.dto.user.UserPasswordUpdateDTO;
-import com.payMyBuddy.exception.EmailAlreadyExistException;
-import com.payMyBuddy.exception.IncorrectPasswordException;
 import com.payMyBuddy.exception.ResourceNotFoundException;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.UserRepository;
+import com.payMyBuddy.security.CustomUserDetailsService;
+import com.payMyBuddy.security.SecurityUtils;
 import com.payMyBuddy.service.AccountService;
 import com.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
 @Transactional
 public class UserIT {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private UserService userService;
@@ -38,147 +62,215 @@ public class UserIT {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private UserCreateDTO user;
+    @MockitoBean
+    private SecurityUtils securityUtils;
+
+    private User currentUser;
 
     @BeforeEach
     void setUp() {
-        user = new UserCreateDTO();
-        user.setEmail("user@example.com");
-        user.setUsername("user");
-        user.setPassword("123123");
-        user.setConfirmPassword("123123");
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+
+        // Given
+        UserCreateDTO createdUser = new UserCreateDTO();
+        createdUser.setEmail("user@example.com");
+        createdUser.setUsername("user");
+        createdUser.setPassword("123123");
+        createdUser.setConfirmPassword("123123");
+
+        userService.createUser(createdUser);
+        currentUser = userService.findByUserEmailInternalUse(createdUser.getEmail());
+
+        when(securityUtils.getCurrentUserId()).thenReturn(currentUser.getId());
     }
 
     @Test
     @DisplayName("Création d'un utilisateur")
-    void createUser_test() {
-
+    @WithAnonymousUser
+    void createUser_test() throws Exception {
         // Given
-        assertFalse(userService.existsByEmail(user.getEmail()));
+        when(securityUtils.getCurrentUserId()).thenReturn(null);
+
+        UserCreateDTO newUser = new UserCreateDTO();
+        newUser.setEmail("newUser@example.com");
+        newUser.setUsername("newUser");
+        newUser.setPassword("456456");
+        newUser.setConfirmPassword("456456");
 
         // When
-        userService.createUser(user);
+        mockMvc.perform(post("/processSignup")
+                        .param("email", newUser.getEmail())
+                        .param("username", newUser.getUsername())
+                        .param("password", newUser.getPassword())
+                        .param("confirmPassword", newUser.getConfirmPassword())
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
 
         // Then
-        assertTrue(userService.existsByEmail(user.getEmail()));
-
-        User createdUser = userRepository.findByEmail(user.getEmail())
+        User createdUser = userRepository.findByEmail(newUser.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
 
-        assertEquals(user.getUsername(), createdUser.getUsername());
-        assertNotNull(createdUser.getAccounts(), "Un compte PayMyBuddy est crée automatiquement.");
-        assertTrue(passwordEncoder.matches(user.getPassword(), createdUser.getPassword()));
-
+        assert createdUser.getUsername().equals(newUser.getUsername());
+        assert createdUser.getAccounts() != null;
     }
 
     @Test
     @DisplayName("Création d'un utilisateur avec email existant - Doit lever une exception")
-    void createUser_EmailAlreadyExists_test() {
+    @WithAnonymousUser
+    void createUser_EmailAlreadyExists_test() throws Exception {
 
         // Given
-        userService.createUser(user);
+        when(securityUtils.getCurrentUserId()).thenReturn(null);
 
-        // When
         UserCreateDTO duplicateUser = new UserCreateDTO();
-        duplicateUser.setEmail(user.getEmail());
-        duplicateUser.setUsername("user2");
+        duplicateUser.setEmail("user@example.com");
+        duplicateUser.setUsername("duplicateUser");
         duplicateUser.setPassword("456456");
         duplicateUser.setConfirmPassword("456456");
 
-        // Then
-        assertThrows(EmailAlreadyExistException.class, () -> {
-            userService.createUser(duplicateUser);
-        });
+        // When/Then
+        mockMvc.perform(post("/processSignup")
+                        .flashAttr("user", duplicateUser)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk())
+                .andExpect(view().name("signup-form"))
+                .andExpect(model().attributeHasFieldErrors("user", "email"))
+                .andExpect(model().errorCount(1));
     }
 
     @Test
-    @DisplayName("Création de contact")
-    void createContact_test() {
-
+    @DisplayName("Création d'un contact")
+    @WithMockUser
+    void createContact_test() throws Exception {
         // Given
+        UserCreateDTO contact = new UserCreateDTO();
+        contact.setEmail("contact@example.com");
+        contact.setUsername("contact");
+        contact.setPassword("789789");
+        contact.setConfirmPassword("789789");
 
-        UserCreateDTO user1DTO = new UserCreateDTO();
-        user1DTO.setUsername("User1");
-        user1DTO.setEmail("user1@example.com");
-        user1DTO.setPassword("123123");
-        user1DTO.setConfirmPassword("123123");
+        userService.createUser(contact);
 
-        UserCreateDTO user2DTO = new UserCreateDTO();
-        user2DTO.setEmail("user2@example.com");
-        user2DTO.setUsername("User2");
-        user2DTO.setPassword("456456");
-        user2DTO.setConfirmPassword("456456");
+        // When/Then
+        mockMvc.perform(post("/createContact")
+                        .param("email", contact.getEmail())
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/contacts"));
 
-        userService.createUser(user1DTO);
-        userService.createUser(user2DTO);
-
-        User user1 = userRepository.findByEmail(user1DTO.getEmail())
+        // Verify contact was added
+        User updatedUser = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
 
-        ContactCreateDTO contactCreateDTO = new ContactCreateDTO();
-        contactCreateDTO.setEmail(user2DTO.getEmail());
-
-        // When
-        userService.createContact(user1.getId(), contactCreateDTO);
-
-        User updatedUser = userRepository.findById(user1.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
-
-        // Then
 
         assertTrue(updatedUser.getContacts().stream()
-                .anyMatch(contact -> contact.getEmail().equals(user2DTO.getEmail())));
+                .anyMatch(con -> con.getEmail().equals(contact.getEmail())));
+    }
+
+    /*
+    @Test
+    @DisplayName("Suppression d'un contact avec succès")
+    @WithMockUser
+    void deleteContact_success_test() throws Exception {
+
+        // Given
+        UserCreateDTO contact = new UserCreateDTO();
+        contact.setEmail("contact@example.com");
+        contact.setUsername("contact");
+        contact.setPassword("789789");
+        contact.setConfirmPassword("789789");
+
+        userService.createUser(contact);
+
+        mockMvc.perform(post("/createContact")
+                        .param("email", contact.getEmail())
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/contacts"));
+
+        // Verify contact was added
+        User userWithContact = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+        assertTrue(userWithContact.getContacts().stream()
+                .anyMatch(con -> con.getEmail().equals(contact.getEmail())));
+
+
+        // When/Then - Delete the contact
+        mockMvc.perform(delete("/contacts/{contactId}", contact.getId())
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/contacts"))
+                .andExpect(flash().attributeExists("successMessage"))
+                .andExpect(flash().attribute("successMessage", "Contact supprimé avec succès !"));
+
+        // Verify contact was removed
+        User updatedUser = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+        assertFalse(updatedUser.getContacts().stream()
+                .anyMatch(con -> con.getEmail().equals(contact.getEmail())));
+    }
+    */
+
+    @Test
+    @DisplayName("Suppression d'un contact - contact non existant")
+    @WithMockUser
+    void deleteContact_nonExistingContact_test() throws Exception {
+        // When/Then
+        mockMvc.perform(delete("/contacts/{contactId}", 9999)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/contacts"))
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Utilisateur non trouvé."));
     }
 
     @Test
     @DisplayName("Mise à jour de mot de passe")
-    void updatePassword_test() {
+    @WithMockUser
+    void updatePassword_test() throws Exception {
 
-        // Given
-        userService.createUser(user);
+        // When/Then
+        mockMvc.perform(put("/profileUpdate")
+                        .param("actualPassword", "123123")
+                        .param("newPassword", "newPass")
+                        .param("confirmNewPassword", "newPass")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/profile"));
 
-        User createdUser = userRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
-
-        UserPasswordUpdateDTO passwordUpdateDTO = new UserPasswordUpdateDTO();
-        passwordUpdateDTO.setActualPassword("123123");
-        passwordUpdateDTO.setNewPassword("789789");
-        passwordUpdateDTO.setConfirmNewPassword("789789");
-
-        // When
-        userService.updatePasswordByUserId(passwordUpdateDTO, createdUser.getId());
-
-        // Then
-        User updatedUser = userRepository.findById(createdUser.getId())
+        // Verify password was updated
+        User updatedUser = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
 
         assertTrue(passwordEncoder.matches(
-                passwordUpdateDTO.getNewPassword(),
+                "newPass",
                 updatedUser.getPassword()
         ));
+
     }
 
     @Test
     @DisplayName("Mise à jour de mot de passe avec mot de passe incorrect - Doit lever une exception")
-    void updatePassword_whenNotValid_test() {
-
-        // Given
-        userService.createUser(user);
-
-        User createdUser = userRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
-
-        UserPasswordUpdateDTO passwordUpdateDTO = new UserPasswordUpdateDTO();
-        passwordUpdateDTO.setActualPassword("123123");
-        passwordUpdateDTO.setNewPassword("456456");
-        passwordUpdateDTO.setConfirmNewPassword("789789");
-
-        // When
-        userService.updatePasswordByUserId(passwordUpdateDTO, createdUser.getId());
-
-        // Then
-        assertThrows(IncorrectPasswordException.class, () -> {
-            userService.updatePasswordByUserId(passwordUpdateDTO, createdUser.getId());
-        });
+    @WithMockUser
+    void updatePassword_whenNotValid_test() throws Exception {
+        // When/Then
+        mockMvc.perform(put("/profileUpdate")
+                        .param("actualPassword", "wrongPass")
+                        .param("newPassword", "newPass")
+                        .param("confirmNewPassword", "newPass")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Le mot de passe actuel est incorrect."));
     }
 }

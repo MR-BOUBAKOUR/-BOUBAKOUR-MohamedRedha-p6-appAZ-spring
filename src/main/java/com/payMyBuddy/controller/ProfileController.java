@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class ProfileController {
         return "profile";
     }
 
-    @PostMapping("/profileUpdate")
+    @PutMapping("/profileUpdate")
     public String profileUpdate(
             @Valid @ModelAttribute("passwordUpdate") UserPasswordUpdateDTO userPasswordUpdateDTO,
             BindingResult bindingResult,

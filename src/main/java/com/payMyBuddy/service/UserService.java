@@ -105,7 +105,7 @@ public class UserService {
             userPasswordUpdateDTO.getActualPassword(),
             user.getPassword()
         )) {
-            throw new IncorrectPasswordException("Le mot de passe actuel est incorrect");
+            throw new IncorrectPasswordException("Le mot de passe actuel est incorrect.");
         }
 
         user.setPassword(passwordEncoder.encode(userPasswordUpdateDTO.getNewPassword()));
