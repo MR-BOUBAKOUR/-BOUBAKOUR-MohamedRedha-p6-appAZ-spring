@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -174,7 +175,6 @@ public class UserIT {
                 .anyMatch(con -> con.getEmail().equals(contact.getEmail())));
     }
 
-    /*
     @Test
     @DisplayName("Suppression d'un contact avec succès")
     @WithMockUser
@@ -202,10 +202,15 @@ public class UserIT {
         assertTrue(userWithContact.getContacts().stream()
                 .anyMatch(con -> con.getEmail().equals(contact.getEmail())));
 
+        User targetContact = userWithContact.getContacts().stream()
+                .filter(con -> con.getEmail().equals("contact@example.com"))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Contact non trouvé."));
 
         // When/Then - Delete the contact
-        mockMvc.perform(delete("/contacts/{contactId}", contact.getId())
+        mockMvc.perform(delete("/contacts/{contactId}", targetContact.getId())
                         .with(csrf()))
+                .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/contacts"))
                 .andExpect(flash().attributeExists("successMessage"))
@@ -217,7 +222,6 @@ public class UserIT {
         assertFalse(updatedUser.getContacts().stream()
                 .anyMatch(con -> con.getEmail().equals(contact.getEmail())));
     }
-    */
 
     @Test
     @DisplayName("Suppression d'un contact - contact non existant")
