@@ -1,5 +1,7 @@
 package com.payMyBuddy.integration;
 
+import com.payMyBuddy.dto.account.AccountCreateDTO;
+import com.payMyBuddy.dto.account.BalanceUpdateDTO;
 import com.payMyBuddy.dto.user.UserCreateDTO;
 import com.payMyBuddy.exception.ResourceNotFoundException;
 import com.payMyBuddy.model.Account;
@@ -98,22 +100,13 @@ public class TransactionIT {
         userService.createUser(createdUser);
         user = userService.findByUserEmailInternalUse(createdUser.getEmail());
 
-        when(securityUtils.getCurrentUserId()).thenReturn(user.getId());
 
             // Creating Sender Account & Receiver Account
-        mockMvc.perform(post("/createAccount")
-                        .param("name", "Sender Account")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/accounts"));
+        AccountCreateDTO senderAccountDTO = new AccountCreateDTO("Sender Account");
+        AccountCreateDTO receiverAccountDTO = new AccountCreateDTO("Receiver Account");
 
-        mockMvc.perform(post("/createAccount")
-                        .param("name", "Receiver Account")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/accounts"));
+        accountService.createAccount(senderAccountDTO, user.getId());
+        accountService.createAccount(receiverAccountDTO, user.getId());
 
         Set<Account> userAccounts = accountRepository.findByUserId(user.getId());
 
@@ -128,13 +121,13 @@ public class TransactionIT {
                 .orElseThrow(() -> new ResourceNotFoundException("Compte destinataire non trouvé."));
 
             // Adding funds to the sender account
-        mockMvc.perform(put("/accounts/deposit")
-                        .param("accountId", String.valueOf(senderAccount.getId()))
-                        .param("amount", "1000")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/accounts"));
+        BalanceUpdateDTO balanceUpdateDTO = new BalanceUpdateDTO();
+        balanceUpdateDTO.setAccountId(senderAccount.getId());
+        balanceUpdateDTO.setAmount(new BigDecimal("1000"));
+
+        accountService.updateBalanceAccount(balanceUpdateDTO);
+
+        when(securityUtils.getCurrentUserId()).thenReturn(user.getId());
     }
 
     @Test
