@@ -90,8 +90,8 @@ public class AccountIT {
     }
 
     @Test
-    @DisplayName("Création d'un compte")
-    void createAccount_test() throws Exception {
+    @DisplayName("Création d'un compte avec succès")
+    void createAccount_success_test() throws Exception {
 
         // When
         mockMvc.perform(post("/createAccount")
@@ -116,7 +116,7 @@ public class AccountIT {
 
     @Test
     @DisplayName("Création d'un compte avec un nom existant - Doit lever une exception")
-    void createAccount_withAlreadyExist_shouldThrowException_test() throws Exception {
+    void createAccount_withAccountAlreadyExist_shouldThrowException_test() throws Exception {
 
         // Given
         mockMvc.perform(post("/createAccount")
@@ -149,7 +149,7 @@ public class AccountIT {
 
     @Test
     @DisplayName("Création d'un compte avec une erreur de validation - Doit lever une exception")
-    void createAccount_wheNotValidData_shouldFail() throws Exception {
+    void createAccount_wheNotValidData_shouldThrowException_test() throws Exception {
         // Attempt to create account with empty name
         mockMvc.perform(post("/createAccount")
                         .param("name", "")
@@ -160,8 +160,8 @@ public class AccountIT {
     }
 
     @Test
-    @DisplayName("Suppression d'un compte")
-    void deleteAccount_test() throws Exception {
+    @DisplayName("Suppression d'un compte avec succès")
+    void deleteAccount_success_test() throws Exception {
 
         // Given
         mockMvc.perform(post("/createAccount")
@@ -202,8 +202,8 @@ public class AccountIT {
     }
 
     @Test
-    @DisplayName("Mise à jour du solde d'un compte")
-    void updateBalanceAccount_test() throws Exception {
+    @DisplayName("Mise à jour du solde d'un compte avec succès")
+    void updateBalanceAccount_success_test() throws Exception {
 
         // Given
         mockMvc.perform(post("/createAccount")
@@ -229,11 +229,9 @@ public class AccountIT {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/accounts"));
 
+        Account updatedAccount = accountService.findAccountByIdInternalUse(targetAccount.getId());
 
         // Then
-        Account updatedAccount = accountRepository.findById(targetAccount.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
-
         assertEquals(BigDecimal.valueOf(100), updatedAccount.getBalance());
     }
 

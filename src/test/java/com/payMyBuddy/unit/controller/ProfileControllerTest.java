@@ -32,8 +32,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = ProfileController.class)
@@ -95,7 +94,7 @@ class ProfileControllerTest {
         // When & Then
         doNothing().when(userService).updatePasswordByUserId(any(UserPasswordUpdateDTO.class), eq(userId));
 
-        mockMvc.perform(post("/profileUpdate")
+        mockMvc.perform(put("/profileUpdate")
                         .param("actualPassword", "123")
                         .param("newPassword", "456789")
                         .param("confirmNewPassword", "456789")
@@ -118,7 +117,7 @@ class ProfileControllerTest {
         when(userService.findByUserId(userId)).thenReturn(user);
 
         // When & Then
-        mockMvc.perform(post("/profileUpdate")
+        mockMvc.perform(put("/profileUpdate")
                         .param("actualPassword", "123123")
                         .param("newPassword", "456")
                         .param("confirmNewPassword", "123")

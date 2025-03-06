@@ -1,8 +1,6 @@
 package com.payMyBuddy.integration;
 
-import com.payMyBuddy.dto.user.ContactCreateDTO;
 import com.payMyBuddy.dto.user.UserCreateDTO;
-import com.payMyBuddy.dto.user.UserPasswordUpdateDTO;
 import com.payMyBuddy.exception.ResourceNotFoundException;
 import com.payMyBuddy.model.User;
 import com.payMyBuddy.repository.UserRepository;
@@ -89,9 +87,9 @@ public class UserIT {
     }
 
     @Test
-    @DisplayName("Création d'un utilisateur")
+    @DisplayName("Création d'un utilisateur avec succès")
     @WithAnonymousUser
-    void createUser_test() throws Exception {
+    void createUser_success_test() throws Exception {
         // Given
         when(securityUtils.getCurrentUserId()).thenReturn(null);
 
@@ -113,8 +111,7 @@ public class UserIT {
                 .andExpect(redirectedUrl("/login"));
 
         // Then
-        User createdUser = userRepository.findByEmail(newUser.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+        User createdUser = userService.findByUserEmailInternalUse(newUser.getEmail());
 
         assert createdUser.getUsername().equals(newUser.getUsername());
         assert createdUser.getAccounts() != null;
@@ -123,7 +120,7 @@ public class UserIT {
     @Test
     @DisplayName("Création d'un utilisateur avec email existant - Doit lever une exception")
     @WithAnonymousUser
-    void createUser_EmailAlreadyExists_test() throws Exception {
+    void createUser_whenEmailAlreadyExists_test() throws Exception {
 
         // Given
         when(securityUtils.getCurrentUserId()).thenReturn(null);
@@ -146,9 +143,10 @@ public class UserIT {
     }
 
     @Test
-    @DisplayName("Création d'un contact")
+    @DisplayName("Création d'un contact avec succès")
     @WithMockUser
-    void createContact_test() throws Exception {
+    void createContact_success_test() throws Exception {
+
         // Given
         UserCreateDTO contact = new UserCreateDTO();
         contact.setEmail("contact@example.com");
@@ -167,8 +165,7 @@ public class UserIT {
                 .andExpect(redirectedUrl("/contacts"));
 
         // Verify contact was added
-        User updatedUser = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+        User updatedUser = userService.findByUserIdInternalUse(currentUser.getId());
 
 
         assertTrue(updatedUser.getContacts().stream()
@@ -197,8 +194,8 @@ public class UserIT {
                 .andExpect(redirectedUrl("/contacts"));
 
         // Verify contact was added
-        User userWithContact = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+        User userWithContact = userService.findByUserIdInternalUse(currentUser.getId());
+
         assertTrue(userWithContact.getContacts().stream()
                 .anyMatch(con -> con.getEmail().equals(contact.getEmail())));
 
@@ -217,16 +214,16 @@ public class UserIT {
                 .andExpect(flash().attribute("successMessage", "Contact supprimé avec succès !"));
 
         // Verify contact was removed
-        User updatedUser = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+        User updatedUser = userService.findByUserIdInternalUse(currentUser.getId());
+
         assertFalse(updatedUser.getContacts().stream()
                 .anyMatch(con -> con.getEmail().equals(contact.getEmail())));
     }
 
     @Test
-    @DisplayName("Suppression d'un contact - contact non existant")
+    @DisplayName("Suppression d'un contact non existant - Doit lever une exception")
     @WithMockUser
-    void deleteContact_nonExistingContact_test() throws Exception {
+    void deleteContact_whenNonExistingContact_test() throws Exception {
         // When/Then
         mockMvc.perform(delete("/contacts/{contactId}", 9999)
                         .with(csrf()))
@@ -237,9 +234,9 @@ public class UserIT {
     }
 
     @Test
-    @DisplayName("Mise à jour de mot de passe")
+    @DisplayName("Mise à jour de mot de passe avec succès")
     @WithMockUser
-    void updatePassword_test() throws Exception {
+    void updatePassword_success_test() throws Exception {
 
         // When/Then
         mockMvc.perform(put("/profileUpdate")
@@ -252,8 +249,7 @@ public class UserIT {
                 .andExpect(redirectedUrl("/profile"));
 
         // Verify password was updated
-        User updatedUser = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
+        User updatedUser = userService.findByUserIdInternalUse(currentUser.getId());
 
         assertTrue(passwordEncoder.matches(
                 "newPass",

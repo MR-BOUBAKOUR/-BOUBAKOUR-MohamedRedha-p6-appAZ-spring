@@ -132,7 +132,7 @@ class UserServiceTest {
         );
 
         // Then
-        assertEquals("Le mot de passe actuel est incorrect", exception.getMessage());
+        assertEquals("Le mot de passe actuel est incorrect.", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 
