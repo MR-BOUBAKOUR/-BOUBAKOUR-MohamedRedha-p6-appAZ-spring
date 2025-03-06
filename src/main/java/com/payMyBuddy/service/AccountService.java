@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The type Account service.
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -32,11 +35,23 @@ public class AccountService {
 
     private final UserService userService;
 
+    /**
+     * Find account by id - internal use.
+     *
+     * @param accountId the account id
+     * @return the account
+     */
     public Account findAccountByIdInternalUse(Integer accountId) {
         return accountRepository.findById(accountId)
             .orElseThrow(() -> new ResourceNotFoundException("Compte non trouvé."));
     }
 
+    /**
+     * Create account.
+     *
+     * @param accountCreateDTO the account create dto
+     * @param userId           the user id
+     */
     public void createAccount(AccountCreateDTO accountCreateDTO, Integer userId) {
 
         User user = userService.findByUserIdInternalUse(userId);
@@ -53,12 +68,22 @@ public class AccountService {
         accountRepository.save(account);
     }
 
+    /**
+     * Delete account.
+     *
+     * @param accountId the account id
+     */
     public void deleteAccount(Integer accountId) {
 
         Account account = findAccountByIdInternalUse(accountId);
         accountRepository.delete(account);
     }
 
+    /**
+     * Update balance account.
+     *
+     * @param balanceUpdateDTO the balance update dto
+     */
     public void updateBalanceAccount(BalanceUpdateDTO balanceUpdateDTO) {
 
         Account account = findAccountByIdInternalUse(balanceUpdateDTO.getAccountId());
@@ -70,6 +95,12 @@ public class AccountService {
         accountRepository.save(account);
     }
 
+    /**
+     * Find accounts for current user and his contacts list.
+     *
+     * @param userId the user id
+     * @return the list
+     */
     public List<ReceiversAccountsResponseDTO> findAccountsForCurrentUserAndHisContacts(Integer userId) {
 
         List<ReceiversAccountsResponseDTO> allAccountsDTO = new ArrayList<>();
@@ -108,6 +139,11 @@ public class AccountService {
         return allAccountsDTO;
     }
 
+    /**
+     * Save account.
+     *
+     * @param account the account
+     */
     public void saveAccount(Account account) {
         accountRepository.save(account);
     }

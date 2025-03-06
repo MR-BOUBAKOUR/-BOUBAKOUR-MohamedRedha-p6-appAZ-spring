@@ -17,6 +17,9 @@ import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * The type Transaction service.
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,6 +30,13 @@ public class TransactionService {
 
     private final AccountService accountService;
 
+    /**
+     * Find transactions list for current user.
+     *
+     * @param currentUserId the current user id
+     * @param limit         the limit
+     * @return the list
+     */
     public List<TransactionResponseDTO> findTransactionsForCurrentUser(Integer currentUserId, int limit) {
 
         List<TransactionResponseDTO> transactions = transactionRepository
@@ -45,6 +55,11 @@ public class TransactionService {
         return transactions;
     }
 
+    /**
+     * Create transaction.
+     *
+     * @param transactionCreateDTO the transaction create dto
+     */
     public void createTransaction(TransactionCreateDTO transactionCreateDTO) {
 
         Account senderAccount = accountService.findAccountByIdInternalUse(transactionCreateDTO.getSenderAccountId());

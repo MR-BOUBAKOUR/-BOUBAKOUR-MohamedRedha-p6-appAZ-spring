@@ -20,6 +20,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * The type Transaction controller.
+ */
 @Controller
 public class TransactionController {
 
@@ -28,6 +31,14 @@ public class TransactionController {
     private final AccountService accountService;
     private final SecurityUtils securityUtils;
 
+    /**
+     * Instantiates a new Transaction controller.
+     *
+     * @param userService        the user service
+     * @param transactionService the transaction service
+     * @param accountService     the account service
+     * @param securityUtils      the security utils
+     */
     public TransactionController(UserService userService, TransactionService transactionService, AccountService accountService, SecurityUtils securityUtils) {
         this.userService = userService;
         this.transactionService = transactionService;
@@ -35,6 +46,12 @@ public class TransactionController {
         this.securityUtils = securityUtils;
     }
 
+    /**
+     * Show transactions.
+     *
+     * @param model the model
+     * @return the string
+     */
     @GetMapping("/transactions")
     public String showTransactions(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
@@ -50,6 +67,15 @@ public class TransactionController {
         return "transactions";
     }
 
+    /**
+     * Create transaction.
+     *
+     * @param transaction        the transaction
+     * @param bindingResult      the binding result
+     * @param model              the model
+     * @param redirectAttributes the redirect attributes
+     * @return the string
+     */
     @PostMapping("/createTransaction")
     public String createTransaction(
         @Valid @ModelAttribute("transactionCreate") TransactionCreateDTO transaction,

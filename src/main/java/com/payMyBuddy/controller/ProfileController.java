@@ -20,18 +20,34 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * The type Profile controller.
+ */
 @Controller
 public class ProfileController {
 
     private final UserService userService;
     private final SecurityUtils securityUtils;
 
+    /**
+     * Instantiates a new Profile controller.
+     *
+     * @param userService        the user service
+     * @param transactionService the transaction service
+     * @param securityUtils      the security utils
+     */
     @Autowired
     public ProfileController(UserService userService, TransactionService transactionService, SecurityUtils securityUtils) {
         this.userService = userService;
         this.securityUtils = securityUtils;
     }
 
+    /**
+     * Show profile.
+     *
+     * @param model the model
+     * @return the string
+     */
     @GetMapping("/profile")
     public String showProfile(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
@@ -42,6 +58,15 @@ public class ProfileController {
         return "profile";
     }
 
+    /**
+     * Profile update.
+     *
+     * @param userPasswordUpdateDTO the user password update dto
+     * @param bindingResult         the binding result
+     * @param model                 the model
+     * @param redirectAttributes    the redirect attributes
+     * @return the string
+     */
     @PutMapping("/profileUpdate")
     public String profileUpdate(
             @Valid @ModelAttribute("passwordUpdate") UserPasswordUpdateDTO userPasswordUpdateDTO,

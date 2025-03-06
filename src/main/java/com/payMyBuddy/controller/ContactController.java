@@ -13,18 +13,33 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * The type Contact controller.
+ */
 @Controller
 public class ContactController {
 
     private final UserService userService;
     private final SecurityUtils securityUtils;
 
+    /**
+     * Instantiates a new Contact controller.
+     *
+     * @param userService   the user service
+     * @param securityUtils the security utils
+     */
     @Autowired
     public ContactController(UserService userService, SecurityUtils securityUtils) {
         this.userService = userService;
         this.securityUtils = securityUtils;
     }
 
+    /**
+     * Show contacts.
+     *
+     * @param model the model
+     * @return the string
+     */
     @GetMapping("/contacts")
     public String showContacts(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
@@ -35,6 +50,15 @@ public class ContactController {
         return "contacts";
     }
 
+    /**
+     * Create contact.
+     *
+     * @param contactCreateDTO   the contact create dto
+     * @param bindingResult      the binding result
+     * @param model              the model
+     * @param redirectAttributes the redirect attributes
+     * @return the string
+     */
     @PostMapping("/createContact")
     public String createContact(
             @Valid @ModelAttribute("createContact") ContactCreateDTO contactCreateDTO,
@@ -56,6 +80,13 @@ public class ContactController {
         return "redirect:/contacts";
     }
 
+    /**
+     * Delete contact.
+     *
+     * @param contactId          the contact id
+     * @param redirectAttributes the redirect attributes
+     * @return the string
+     */
     @DeleteMapping("/contacts/{contactId}")
     public String deleteContact(
             @PathVariable Integer contactId,

@@ -18,6 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * The type User service.
+ */
 @Service
 @Transactional
 public class UserService {
@@ -28,6 +31,13 @@ public class UserService {
 
     private final AccountService accountService;
 
+    /**
+     * Instantiates a new User service.
+     *
+     * @param userRepository the user repository
+     * @param userMapper     the user mapper
+     * @param accountService the account service
+     */
     @Autowired
     public UserService(UserRepository userRepository, UserMapper userMapper, @Lazy AccountService accountService) {
         this.userRepository = userRepository;
@@ -37,26 +47,55 @@ public class UserService {
         this.accountService = accountService;
     }
 
+    /**
+     * Find by user id - internal use.
+     *
+     * @param userId the user id
+     * @return the user
+     */
     public User findByUserIdInternalUse(Integer userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
+    /**
+     * Find by user id.
+     *
+     * @param userId the user id
+     * @return the user response dto
+     */
     public UserResponseDTO findByUserId(Integer userId) {
         return userRepository.findById(userId)
             .map(userMapper::toUserResponseDTO)
             .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
+    /**
+     * Find by user email - internal use.
+     *
+     * @param email the email
+     * @return the user
+     */
     public User findByUserEmailInternalUse(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non trouvé."));
     }
 
+    /**
+     * Check if Exists by email.
+     *
+     * @param email the email
+     * @return the boolean
+     */
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
+    /**
+     * Create user.
+     *
+     * @param newUser the new user
+     */
     public void createUser(UserCreateDTO newUser) {
 
         if (existsByEmail(newUser.getEmail())) {
@@ -74,6 +113,12 @@ public class UserService {
         );
     }
 
+    /**
+     * Create contact.
+     *
+     * @param userId           the user id
+     * @param contactCreateDTO the contact create dto
+     */
     public void createContact(Integer userId, ContactCreateDTO contactCreateDTO) {
 
         User user = findByUserIdInternalUse(userId);
@@ -86,6 +131,12 @@ public class UserService {
         userRepository.save(contact);
     }
 
+    /**
+     * Delete contact.
+     *
+     * @param userId    the user id
+     * @param contactId the contact id
+     */
     public void deleteContact(Integer userId, Integer contactId) {
 
         User user = findByUserIdInternalUse(userId);
@@ -98,6 +149,12 @@ public class UserService {
         userRepository.save(contact);
     }
 
+    /**
+     * Update password by user id.
+     *
+     * @param userPasswordUpdateDTO the user password update dto
+     * @param userId                the user id
+     */
     public void updatePasswordByUserId(UserPasswordUpdateDTO userPasswordUpdateDTO, Integer userId) {
 
         User user = findByUserIdInternalUse(userId);

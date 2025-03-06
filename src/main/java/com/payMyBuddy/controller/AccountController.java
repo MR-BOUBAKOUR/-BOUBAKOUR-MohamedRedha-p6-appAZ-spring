@@ -19,6 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * The type Account controller.
+ */
 @Controller
 public class AccountController {
 
@@ -26,6 +29,13 @@ public class AccountController {
     private final AccountService accountService;
     private final SecurityUtils securityUtils;
 
+    /**
+     * Instantiates a new Account controller.
+     *
+     * @param userService    the user service
+     * @param accountService the account service
+     * @param securityUtils  the security utils
+     */
     @Autowired
     public AccountController(UserService userService, AccountService accountService, SecurityUtils securityUtils) {
         this.userService = userService;
@@ -33,6 +43,12 @@ public class AccountController {
         this.securityUtils = securityUtils;
     }
 
+    /**
+     * Show accounts.
+     *
+     * @param model the model
+     * @return the string
+     */
     @GetMapping("/accounts")
     public String showAccounts(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
@@ -42,6 +58,15 @@ public class AccountController {
         return "accounts";
     }
 
+    /**
+     * Create account.
+     *
+     * @param newAccount         the new account
+     * @param bindingResult      the binding result
+     * @param model              the model
+     * @param redirectAttributes the redirect attributes
+     * @return the string
+     */
     @PostMapping("/createAccount")
     public String createAccount(
         @Valid @ModelAttribute("createAccount") AccountCreateDTO newAccount,
@@ -62,6 +87,15 @@ public class AccountController {
         return "redirect:/accounts";
     }
 
+    /**
+     * Create deposit.
+     *
+     * @param addedBalance       the added balance
+     * @param bindingResult      the binding result
+     * @param model              the model
+     * @param redirectAttributes the redirect attributes
+     * @return the string
+     */
     @PutMapping("/accounts/deposit")
     public String createDeposit(
             @Valid @ModelAttribute("updateBalance") BalanceUpdateDTO addedBalance,
@@ -82,6 +116,13 @@ public class AccountController {
         return "redirect:/accounts";
     }
 
+    /**
+     * Delete account.
+     *
+     * @param accountId          the account id
+     * @param redirectAttributes the redirect attributes
+     * @return the string
+     */
     @DeleteMapping("/accounts/{accountId}")
     public String deleteAccount(
         @PathVariable Integer accountId,

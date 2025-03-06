@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
+/**
+ * The type Dashboard controller.
+ */
 @Controller
 public class DashboardController {
 
@@ -20,6 +23,13 @@ public class DashboardController {
     private final TransactionService transactionService;
     private final SecurityUtils securityUtils;
 
+    /**
+     * Instantiates a new Dashboard controller.
+     *
+     * @param userService        the user service
+     * @param transactionService the transaction service
+     * @param securityUtils      the security utils
+     */
     @Autowired
     public DashboardController(UserService userService, TransactionService transactionService, SecurityUtils securityUtils) {
         this.userService = userService;
@@ -27,6 +37,12 @@ public class DashboardController {
         this.securityUtils = securityUtils;
     }
 
+    /**
+     * Show dashboard.
+     *
+     * @param model the model
+     * @return the string
+     */
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
         Integer userId = securityUtils.getCurrentUserId();
